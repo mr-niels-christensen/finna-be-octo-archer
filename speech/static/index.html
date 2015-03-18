@@ -23,7 +23,9 @@
       <div class="row">
         <div class="col-sm-12 col-md-12 main">
           <h1 class="page-header">The Greatest orators!</h1>
+            <p id="loremipsum">
 Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, politician, lawyer, orator, political theorist, consul and constitutionalist. He came from a wealthy municipal family of the Roman equestrian order, and is widely considered one of Rome's greatest orators and prose stylists.
+          </p>
         </div>
         <button type="submit" target="_blank" class="orateButton btn btn-primary">
               Orate &nbsp; <span class="glyphicon glyphicon-arrow-right"></span>
@@ -39,7 +41,7 @@ Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, p
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript">
 function orate() {
-  var msg = new SpeechSynthesisUtterance('Hello World');
+  var msg = new SpeechSynthesisUtterance($( '#loremipsum' ).text());
   window.speechSynthesis.speak(msg);    
 };
 $( document ).ready( function() {
