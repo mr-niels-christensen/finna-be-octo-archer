@@ -40,9 +40,35 @@ Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, p
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
     <script type="text/javascript">
+function test() {
+  console.log('BEGIN')
+  var msg = new SpeechSynthesisUtterance();
+var voices = window.speechSynthesis.getVoices();
+
+msg.voice = voices[21]; // Note: some voices don't support altering params
+msg.voiceURI = 'native';
+msg.volume = 1; // 0 to 1
+msg.rate = 1; // 0.1 to 10
+msg.pitch = 2; //0 to 2
+msg.text = 'Hello World';
+msg.lang = 'en-US';
+
+
+speechSynthesis.speak(msg);
+  console.log('END')
+}
 function orate() {
-  var msg = new SpeechSynthesisUtterance($( '#loremipsum' ).text());
-  window.speechSynthesis.speak(msg);    
+  //See http://updates.html5rocks.com/2014/01/Web-apps-that-talk---Introduction-to-the-Speech-Synthesis-API
+  //Dodge https://code.google.com/p/chromium/issues/detail?id=369472
+  var txt = $( '#loremipsum' ).text();
+  var txts = txt.split('.');
+  $.each(txts, function( index, value ) {
+    var msg = new SpeechSynthesisUtterance(value);
+    msg.onend = function(event) {
+      console.log('Finished ' + index);
+    };
+    window.speechSynthesis.speak(msg);    
+  })
 };
 $( document ).ready( function() {
   $( '.orateButton' ).on( 'click', function() {
