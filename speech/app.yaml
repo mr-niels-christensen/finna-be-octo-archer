@@ -1,0 +1,16 @@
+application: wator-test
+version: speech
+
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /$
+  static_files: static/index.html
+  upload: static/index.html
+- url: /(.*\.(html|js|css|gif))$
+  static_files: static/\1
+  upload: static/.*\.(html|js|css|gif)$
+
+  
