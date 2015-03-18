@@ -8,7 +8,7 @@
     <title>Speak</title>
 
     <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -25,6 +25,9 @@
           <h1 class="page-header">The Greatest orators!</h1>
 Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, politician, lawyer, orator, political theorist, consul and constitutionalist. He came from a wealthy municipal family of the Roman equestrian order, and is widely considered one of Rome's greatest orators and prose stylists.
         </div>
+        <button type="submit" target="_blank" class="orateButton btn btn-primary">
+              Orate &nbsp; <span class="glyphicon glyphicon-arrow-right"></span>
+        </button>
       </div>
     </div>
 
@@ -33,6 +36,17 @@ Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, p
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+function orate() {
+  var msg = new SpeechSynthesisUtterance('Hello World');
+  window.speechSynthesis.speak(msg);    
+};
+$( document ).ready( function() {
+  $( '.orateButton' ).on( 'click', function() {
+    orate();
+  });
+});
+    </script>  
   </body>
 </html>
