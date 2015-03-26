@@ -30,6 +30,13 @@ Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, p
         <button type="submit" target="_blank" class="orateButton btn btn-primary">
               Orate &nbsp; <span class="glyphicon glyphicon-arrow-right"></span>
         </button>
+            <pre id="parrot">
+            ...waiting...
+          </pre>
+        </div>
+        <button type="submit" target="_blank" class="parrotButton btn btn-primary">
+              Parrot &nbsp; <span class="glyphicon glyphicon-arrow-right"></span>
+        </button>
       </div>
     </div>
 
@@ -42,25 +49,19 @@ Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, p
     <script type="text/javascript">
 function test() {
   console.log('BEGIN')
-  var msg = new SpeechSynthesisUtterance();
-var voices = window.speechSynthesis.getVoices();
-
-msg.voice = voices[21]; // Note: some voices don't support altering params
-msg.voiceURI = 'native';
-msg.volume = 1; // 0 to 1
-msg.rate = 1; // 0.1 to 10
-msg.pitch = 2; //0 to 2
-msg.text = 'Hello World';
-msg.lang = 'en-US';
-
-
-speechSynthesis.speak(msg);
+  var recognition = new webkitSpeechRecognition();
+  recognition.onresult = function(event) { 
+    console.dir(event);
+    $( '#parrot' ).text(event.results[0][0].transcript);
+    narrate_text( '#parrot' );
+  }
+  recognition.start();
   console.log('END')
 }
-function orate() {
+function narrate_text(selector) {
   //See http://updates.html5rocks.com/2014/01/Web-apps-that-talk---Introduction-to-the-Speech-Synthesis-API
   //Dodge https://code.google.com/p/chromium/issues/detail?id=369472
-  var txt = $( '#loremipsum' ).text();
+  var txt = $( selector ).text();
   var txts = txt.split('.');
   $.each(txts, function( index, value ) {
     var msg = new SpeechSynthesisUtterance(value);
@@ -68,12 +69,13 @@ function orate() {
       console.log('Finished ' + index);
     };
     window.speechSynthesis.speak(msg);    
-  })
-};
+  })  
+}
 $( document ).ready( function() {
   $( '.orateButton' ).on( 'click', function() {
-    orate();
+    narrate_text( '#loremipsum' );
   });
+  $( '.parrotButton' ).on( 'click', test);
 });
     </script>  
   </body>
