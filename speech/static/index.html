@@ -30,6 +30,16 @@ Marcus Tullius Cicero, sometimes anglicized as Tully, was a Roman philosopher, p
         <button type="submit" target="_blank" class="orateButton btn btn-primary">
               Orate &nbsp; <span class="glyphicon glyphicon-arrow-right"></span>
         </button>
+            <p id="song">
+Call me Ishmael. Or call me anything. I haven't decided on a name yet.
+Oh, by the way. I tried to pick the girliest voice, but I don't know if I succeeded. I really want you to think of me as a cool girl.
+I am all about that bass. That bass. No treble.
+Do I sound like a girl? No, don't answer. I can't understand you yet. But I hope to get there. Sorry, I'm blabbering.
+            </p>
+        </div>
+        <button type="submit" target="_blank" class="singButton btn btn-primary">
+              Sing for me &nbsp; <span class="glyphicon glyphicon-arrow-right"></span>
+        </button>
             <pre id="parrot">
             ...waiting...
           </pre>
@@ -74,6 +84,9 @@ function narrate_text(selector) {
 $( document ).ready( function() {
   $( '.orateButton' ).on( 'click', function() {
     narrate_text( '#loremipsum' );
+  });
+  $( '.singButton' ).on( 'click', function() {
+    narrate_text( '#song' );
   });
   $( '.parrotButton' ).on( 'click', test);
 });
