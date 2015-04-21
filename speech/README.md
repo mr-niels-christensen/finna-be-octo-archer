@@ -1,4 +1,9 @@
 
+Open-source: http://www.findbestopensource.com/tagged/text-to-speech
+http://www.cstr.ed.ac.uk/projects/festival/
+http://stackoverflow.com/questions/tagged/text-to-speech
+http://mary.dfki.de/
+
 Android, Google text-to-speech: https://play.google.com/store/apps/details?id=com.google.android.tts&hl=en
 http://www.greenbot.com/article/2105862/how-to-get-started-with-google-text-to-speech.html
 http://developer.android.com/reference/android/speech/tts/TextToSpeech.html
