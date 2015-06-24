@@ -1,0 +1,332 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"ho",
+				"hoursAdjusted"
+			],
+			[
+				"month",
+				"monthNo"
+			],
+			[
+				"curren",
+				"currentMonthNo"
+			],
+			[
+				"mon",
+				"monthNo"
+			],
+			[
+				"sepake",
+				"sepakeuri"
+			],
+			[
+				"URI",
+				"URIRef"
+			],
+			[
+				"sol",
+				"solution"
+			],
+			[
+				"_rpo",
+				"_prov_endedAtTime"
+			],
+			[
+				"_st",
+				"_prov_startedAtTime"
+			],
+			[
+				"focus",
+				"focusPanel"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"pac",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 216.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/nhc/git/finna-be-octo-archer/briefme"
+	],
+	"file_history":
+	[
+		"/Users/nhc/git/mayacs-www/static/custom.css",
+		"/Users/nhc/git/mayacs-www/static/index.html",
+		"/Users/nhc/git/mayacs-www/app.yaml",
+		"/Users/nhc/git/mayacs-www/notes.txt",
+		"/Users/nhc/git/mayacs-www/static/may-sky.png",
+		"/Users/nhc/git/mayacs-www/static/may.jpg",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/search.html",
+		"/Users/nc/git/environment-scotland-dot-rural/docs/md/investigating-failures.md",
+		"/Users/nc/git/environment-scotland-dot-rural/docs/README.md",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/search-results.js",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/search-history.js",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/api/search/search.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/dotruralsepake/search_handler.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/sparql-backend/seed.sparql.txt",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/pyglib/singleton.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/focus-description.js",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/focus.html",
+		"/Users/nc/git/environment-scotland-dot-rural/docs/md/add-feature-ask-the-experts.md",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/disabled-common-ask.js",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/dotruralsepake/search/search.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/dotruralsepake/search/index.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/dotruralsepake/harvest/pure_oai.py",
+		"/Users/nc/brick.txt",
+		"/Users/nc/scrabble.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/dot-rural-sepake.css",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/common-ajax.js",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/python/dotruralsepake/harvest/nerc.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/sparql-queries/focus.sparql.txt",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/_internal/antlr3/dottreegen.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/data-overview.js",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/include/python2.7/datetime.h",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/_internal/graphy/common.py",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/include/python2.7/compile.h",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/include/python2.7/cobject.h",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/bin/csv2rdf",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/python/setup.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/focus-chart.js",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/dist/neo_cgi.py",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/include/python2.7/node.h",
+		"/Users/nc/git/environment-scotland-dot-rural/docs/functional-diagram.graphml",
+		"/Users/nc/git/environment-scotland-dot-rural/README.md",
+		"/Users/nc/git/environment-scotland-dot-rural/Makefile",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/devappserver2/php/setup.php",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/lib/python2.7/config/Setup",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/tools/devappserver2/scheduled_executor_test.py",
+		"/Users/nc/git/environment-scotland-dot-rural/src/main/frontend/search.js",
+		"/Applications/GoogleAppEngineLauncher.app/Contents/Resources/GoogleAppEngine-default.bundle/Contents/Resources/google_appengine/google/appengine/runtime/request_environment.py",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/lib/python2.7/encodings/mac_arabic.py",
+		"/Users/nc/git/environment-scotland-dot-rural/.venv.for.ide/lib/python2.7/encodings/string_escape.py",
+		"/Users/nc/git/rdflib-appengine/Makefile",
+		"/Users/nc/git/rdflib-appengine/src/main/setup.py"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 120.0,
+		"where_history":
+		[
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"refinement_token",
+			"sparqlListTo",
+			"pip"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 35.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "briefme.sublime-project",
+	"replace":
+	{
+		"height": 66.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"search-r",
+				"environment-scotland-dot-rural/src/main/frontend/search-results.js"
+			],
+			[
+				"foc",
+				"environment-scotland-dot-rural/src/main/frontend/focus.html"
+			],
+			[
+				"focus.",
+				"environment-scotland-dot-rural/src/main/frontend/focus.html"
+			],
+			[
+				"seed",
+				"environment-scotland-dot-rural/src/main/frontend/sparql-backend/seed.sparql.txt"
+			],
+			[
+				"dot",
+				"environment-scotland-dot-rural/src/main/frontend/dot-rural-sepake.css"
+			],
+			[
+				"common-a",
+				"environment-scotland-dot-rural/src/main/frontend/common-ajax.js"
+			],
+			[
+				"searc",
+				"environment-scotland-dot-rural/src/main/frontend/search-results.js"
+			],
+			[
+				"nerc",
+				"environment-scotland-dot-rural/src/main/python/dotruralsepake/harvest/nerc.py"
+			],
+			[
+				"focus",
+				"environment-scotland-dot-rural/src/main/frontend/focus-description.js"
+			],
+			[
+				"focus.h",
+				"environment-scotland-dot-rural/src/main/frontend/focus.html"
+			],
+			[
+				"setup.p",
+				"environment-scotland-dot-rural/src/main/python/setup.py"
+			],
+			[
+				"read",
+				"environment-scotland-dot-rural/README.md"
+			],
+			[
+				"make",
+				"environment-scotland-dot-rural/Makefile"
+			],
+			[
+				"see",
+				"environment-scotland-dot-rural/src/main/frontend/sparql-backend/seed.sparql.txt"
+			],
+			[
+				"search.j",
+				"environment-scotland-dot-rural/src/main/frontend/search.js"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"",
+				"~/csisworkspace/swept.sublime-project"
+			]
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 150.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
