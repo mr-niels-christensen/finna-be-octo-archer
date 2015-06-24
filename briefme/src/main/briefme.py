@@ -1,13 +1,10 @@
 import rdflib
 
 g = rdflib.Graph()
-result = g.parse("http://www.w3.org/People/Berners-Lee/card")
-
+g.parse("http://dbpedia.org/resource/Margaret_Thatcher")
 print("graph has %s statements." % len(g))
-# prints graph has 79 statements.
-
-for subj, pred, obj in g:
-   if (subj, pred, obj) not in g:
-       raise Exception("It better be!")
-
-s = g.serialize(format='n3')
+for (s,p,o) in g:
+    print u'{} {} {}'.format(s,p,o) 
+for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
+    if o.language == 'en':
+        print o
