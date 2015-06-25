@@ -2,9 +2,20 @@ import rdflib
 from rdflib.namespace import DCTERMS, RDF
 from collections import Counter
 
-#s = rdflib.URIRef("http://dbpedia.org/resource/Margaret_Thatcher")
-s = rdflib.URIRef("http://dbpedia.org/resource/Augustus")
+import urllib2
+import json
+from sys import stdin
+print 'Who?'
+x = stdin.readline()
+req = urllib2.Request('http://lookup.dbpedia.org/api/search/KeywordSearch?MaxHits=1&QueryString={}'.format(x), None, {'Accept': 'application/json'})
+f = urllib2.urlopen(req)
+response = f.read()
+f.close()
+data = json.loads(response)   
 
+#s = rdflib.URIRef("http://dbpedia.org/resource/Margaret_Thatcher")
+#s = rdflib.URIRef("http://dbpedia.org/resource/Augustus")
+s = rdflib.URIRef(data["results"][0]["uri"])
 g = rdflib.Graph()
 g.parse(unicode(s))
 for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
