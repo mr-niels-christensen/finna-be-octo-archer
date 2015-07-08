@@ -1,6 +1,7 @@
 import rdflib
 from rdflib.namespace import DCTERMS, RDF
 from collections import Counter
+from langdetect import detect
 
 import urllib2
 import json
@@ -29,8 +30,8 @@ g = rdflib.Graph()
 g.parse(unicode(s))
 abstracts = dict()
 for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
-    print o.language
-    abstracts[o.language] = o
+    print '{},{}'.format(o.language, detect(o))
+    abstracts[detect(o)] = o
 engine.say(abstracts['en'] if 'en' in abstracts else abstracts[None])
 
 total = Counter()
