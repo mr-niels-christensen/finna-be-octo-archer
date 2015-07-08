@@ -5,22 +5,33 @@ from collections import Counter
 import urllib2
 import json
 from sys import stdin
+import pyttsx
+engine = pyttsx.init()
+engine.setProperty('rate', 170)
+
+voices = engine.getProperty('voices')
+for voice in voices:
+    if voice.name != 'Samantha':
+        continue
+    engine.setProperty('voice', voice.id)
+
 print 'Who?'
 x = stdin.readline()
 req = urllib2.Request('http://lookup.dbpedia.org/api/search/KeywordSearch?MaxHits=1&QueryString={}'.format(x), None, {'Accept': 'application/json'})
 f = urllib2.urlopen(req)
 response = f.read()
 f.close()
-data = json.loads(response)   
-
+data = json.loads(response)
 #s = rdflib.URIRef("http://dbpedia.org/resource/Margaret_Thatcher")
 #s = rdflib.URIRef("http://dbpedia.org/resource/Augustus")
 s = rdflib.URIRef(data["results"][0]["uri"])
 g = rdflib.Graph()
 g.parse(unicode(s))
+abstracts = dict()
 for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
-    if o.language == 'en':
-        print o
+    print o.language
+    abstracts[o.language] = o
+engine.say(abstracts['en'] if 'en' in abstracts else abstracts[None])
 
 total = Counter()
 
@@ -64,4 +75,6 @@ print
 
 for (uriref, no) in total.most_common(10):
     print u'{}: {}'.format(no, unicode(uriref))
+
+engine.runAndWait()
 

@@ -3,6 +3,9 @@
 	[
 		{
 			"path": "."
+		},
+		{
+			"path": "/Users/nhc/git/finna-be-octo-archer/speech"
 		}
 	]
 }
