@@ -6,15 +6,6 @@ from langdetect import detect
 import urllib2
 import json
 from sys import stdin
-import pyttsx
-engine = pyttsx.init()
-engine.setProperty('rate', 170)
-
-voices = engine.getProperty('voices')
-for voice in voices:
-    if voice.name != 'Samantha':
-        continue
-    engine.setProperty('voice', voice.id)
 
 print 'Who?'
 x = stdin.readline()
@@ -32,7 +23,8 @@ abstracts = dict()
 for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
     print '{},{}'.format(o.language, detect(o))
     abstracts[detect(o)] = o
-engine.say(abstracts['en'] if 'en' in abstracts else abstracts[None])
+a = abstracts['en'] if 'en' in abstracts else abstracts[None]
+print a
 
 total = Counter()
 
@@ -76,6 +68,4 @@ print
 
 for (uriref, no) in total.most_common(10):
     print u'{}: {}'.format(no, unicode(uriref))
-
-engine.runAndWait()
 
