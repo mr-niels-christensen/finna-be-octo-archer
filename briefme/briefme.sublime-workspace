@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"en",
+				"engine"
+			],
+			[
 				"p",
 				"p"
 			],
@@ -55,7 +59,7 @@
 			"file": "src/main/briefme.py",
 			"settings":
 			{
-				"buffer_size": 2366,
+				"buffer_size": 2509,
 				"line_ending": "Unix"
 			}
 		},
@@ -272,23 +276,25 @@
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 2366,
+						"buffer_size": 2509,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2365,
-								2365
+								118,
+								118
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1511.0,
+						"translation.y": 314.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
@@ -344,7 +350,9 @@
 						"settings":
 						{
 							"auto_name": "",
-							"syntax": "Packages/Python/Python.tmLanguage"
+							"syntax": "Packages/Python/Python.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
