@@ -5,6 +5,7 @@ from google.appengine.api import xmpp
 import time
 import logging
 
+import selectresource
 import briefme
 
 class MainPage(webapp.RequestHandler):
@@ -31,7 +32,7 @@ class ChatReceiver(webapp.RequestHandler):
     def post(self):
         message = xmpp.Message(self.request.POST)
         src, dest, body = _src_dest_body(message)
-        trimmed_body = body.strip().lower().translate(None, '?!.,;:-')
+        trimmed_body = body.strip()#.lower()#.translate(None, '?!.,;:-')
         logging.info("From <{}> to {}: <{}> -> <{}>".format(src, dest, body, trimmed_body))
         respond(src, trimmed_body, Responder(message))
         
@@ -57,12 +58,15 @@ class Responder():
         self._buffer = ''
     
     def _send(self, line):
-        time.sleep(float(len(line)) / 50)
-        logging.info("To <{orig[0]}> from {orig[1]}: <{line}>".format(line = line, orig = _src_dest_body(self._message)))
+        #time.sleep(float(len(line)) / 50)
+        #logging.info("To <{orig[0]}> from {orig[1]}: <{line}>".format(line = line, orig = _src_dest_body(self._message)))
         self._message.reply(line)
 
 def respond(sender, trimmed_body, responder):
-    briefme.brief(trimmed_body, responder)
+    if trimmed_body.startswith('http'):
+        briefme.brief(trimmed_body, responder)
+    else:
+        selectresource.lookup(trimmed_body, responder)
 
 application = webapp.WSGIApplication([('/', MainPage), ('/_ah/xmpp/message/chat/', ChatReceiver)], debug=True)
 
