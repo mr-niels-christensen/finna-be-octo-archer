@@ -6,39 +6,43 @@ import logging
 import urllib2
 import json
 
+_PEOPLE_NW_PREDICATES = [rdflib.URIRef('http://dbpedia.org/property/children'),
+                         rdflib.URIRef('http://dbpedia.org/property/predecessor'),
+                         rdflib.URIRef('http://dbpedia.org/property/successor'),
+                         rdflib.URIRef('http://dbpedia.org/property/deputy'),
+                         rdflib.URIRef('http://dbpedia.org/property/spouse')]
+
+_META_PREDICATES = [RDF.type, #problematic
+        rdflib.URIRef('http://dbpedia.org/property/profession'),
+        rdflib.URIRef('http://dbpedia.org/property/office'),
+        rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
+
 def brief(iri):
     g = rdflib.Graph()
     g.parse(iri)
-    abstracts = dict()
     a = 'Sorry, no description.'
     for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
         if detect(o) == 'en':
             a = o
-    #responder.writeln(a.encode('latin_1','ignore'))
+    return {'abstract' : a, 'friends'  : _friends_of(rdflib.URIRef(iri), g)}
+
+def _friends_of(subject, g):
     total = Counter()
-    for p in [rdflib.URIRef('http://dbpedia.org/property/children'),
-              rdflib.URIRef('http://dbpedia.org/property/predecessor'),
-              rdflib.URIRef('http://dbpedia.org/property/successor'),
-              rdflib.URIRef('http://dbpedia.org/property/deputy'),
-              rdflib.URIRef('http://dbpedia.org/property/spouse')]:
-        for o in g.objects(rdflib.URIRef(iri), p):
-            if isinstance(o, rdflib.URIRef):
-                total[o] += 1
-    #problematic RDF.type, 
-    #rdflib.URIRef('http://dbpedia.org/property/profession'),
-    #rdflib.URIRef('http://dbpedia.org/property/office'),
-    #rdflib.URIRef('http://dbpedia.org/property/wordnet_type')
-    edges = list(g.objects(rdflib.URIRef(iri), DCTERMS.subject))
-    edges = edges[:12]
-    for o in edges:
+    for pred in _PEOPLE_NW_PREDICATES:
+        for related in g.objects(subject, pred):
+            if isinstance(related, rdflib.URIRef):
+                total[related] += 1
+    dc_classes = list(g.objects(subject, DCTERMS.subject))
+    dc_classes = dc_classes[:12]
+    for dc_class in dc_classes:
         try:
             gg = rdflib.Graph()
-            gg.parse(unicode(o))
+            gg.parse(unicode(dc_class))
             part = Counter()
-            for oo in gg.subjects(DCTERMS.subject, o):
+            for oo in gg.subjects(DCTERMS.subject, dc_class):
                 part[oo] += 1
             total += part
         except Exception as e:
             logging.warn(e)
-    return {'abstract' : a, 'friends'  : total.most_common(10)}
+    return total.most_common(10)
 
