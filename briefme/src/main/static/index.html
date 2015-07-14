@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta content="" name="keyword">
+<meta content="" name="description">
+<meta content="Niels Christensen" name="author">
+<title>BriefMe</title>
+</head>
+
+<body>
+<h2>Lookup</h2>
+<input type="text" id="lookup"></input>
+<button onclick="lookup();">Go</button>
+
+<h2>Content</h2>
+<input type="text" id="content"></input>
+<button onclick="content();">Go</button>
+</body>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+function lookup() {
+	var txt = $( '#lookup' ).val();
+	window.location = '/lookup/'+encodeURIComponent(txt);
+}
+function content() {
+	var txt = $( '#content' ).val();
+	window.location = '/content?iri='+encodeURIComponent(txt);
+}
+</script>
+</html>
