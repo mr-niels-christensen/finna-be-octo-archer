@@ -6,7 +6,7 @@ import logging
 import urllib2
 import json
 
-def brief(iri, responder):
+def brief(iri):
     g = rdflib.Graph()
     g.parse(iri)
     abstracts = dict()
@@ -14,7 +14,7 @@ def brief(iri, responder):
     for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
         if detect(o) == 'en':
             a = o
-    responder.writeln(a.encode('latin_1','ignore'))
+    #responder.writeln(a.encode('latin_1','ignore'))
     total = Counter()
     for p in [rdflib.URIRef('http://dbpedia.org/property/children'),
               rdflib.URIRef('http://dbpedia.org/property/predecessor'),
@@ -29,9 +29,7 @@ def brief(iri, responder):
     #rdflib.URIRef('http://dbpedia.org/property/office'),
     #rdflib.URIRef('http://dbpedia.org/property/wordnet_type')
     edges = list(g.objects(rdflib.URIRef(iri), DCTERMS.subject))
-    logging.info('{} edges, selecting a few'.format(len(edges)))
     edges = edges[:12]
-    logging.info(repr(edges))
     for o in edges:
         try:
             gg = rdflib.Graph()
@@ -42,5 +40,5 @@ def brief(iri, responder):
             total += part
         except Exception as e:
             logging.warn(e)
-    logging.info(repr(total.most_common(10)))
+    return {'abstract' : a, 'friends'  : total.most_common(10)}
 
