@@ -20,14 +20,18 @@ _META_PREDICATES = [RDF.type, #problematic
 def brief(iri):
     g = rdflib.Graph()
     g.parse(iri)
-    a = 'Sorry, no description.'
-    for o in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
-        if detect(o) == 'en':
-            a = o
-    return {'abstract' : a, 'friends'  : _friends_of(rdflib.URIRef(iri), g)}
-
-def _friends_of(subject, g):
+    result = {
+        'abstract' : 'Sorry, no description.'
+    }
+    for abstract in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
+        if detect(abstract) == 'en':
+            result['abstract'] = abstract
     total = Counter()
+    _add_friends(rdflib.URIRef(iri), g, total)
+    result['friends'] = total.most_common(20)
+    return result
+
+def _add_friends(subject, g, total):
     for pred in _PEOPLE_NW_PREDICATES:
         for related in g.objects(subject, pred):
             if isinstance(related, rdflib.URIRef):
@@ -40,9 +44,7 @@ def _friends_of(subject, g):
             gg.parse(unicode(dc_class))
             part = Counter()
             for oo in gg.subjects(DCTERMS.subject, dc_class):
-                part[oo] += 1
-            total += part
+                total[oo] += 1
         except Exception as e:
             logging.warn(e)
-    return total.most_common(10)
 
