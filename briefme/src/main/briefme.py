@@ -27,24 +27,25 @@ def brief(iri):
         if detect(abstract) == 'en':
             result['abstract'] = abstract
     total = Counter()
-    _add_friends(rdflib.URIRef(iri), g, total)
+    _add_immediate_connections(rdflib.URIRef(iri), g, total)
+    _add_friends(list(g.objects(rdflib.URIRef(iri), DCTERMS.subject)), total)
     result['friends'] = total.most_common(20)
     return result
 
-def _add_friends(subject, g, total):
+def _add_immediate_connections(subject, g, total):
     for pred in _PEOPLE_NW_PREDICATES:
         for related in g.objects(subject, pred):
             if isinstance(related, rdflib.URIRef):
                 total[related] += 1
-    dc_classes = list(g.objects(subject, DCTERMS.subject))
+
+def _add_friends(dc_classes, total):
     dc_classes = dc_classes[:12]
     for dc_class in dc_classes:
         try:
-            gg = rdflib.Graph()
-            gg.parse(unicode(dc_class))
-            part = Counter()
-            for oo in gg.subjects(DCTERMS.subject, dc_class):
-                total[oo] += 1
+            dc_class_graph = rdflib.Graph()
+            dc_class_graph.parse(unicode(dc_class))
+            for friend in gg.subjects(DCTERMS.subject, dc_class):
+                total[friend] += 1
         except Exception as e:
             logging.warn(e)
 
