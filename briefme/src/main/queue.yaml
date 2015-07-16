@@ -1,0 +1,6 @@
+# Set the total storage limit for all queues
+total_storage_limit: 1M
+queue:
+- name: addeverything
+  rate: 1/m
+  max_concurrent_requests: 1
