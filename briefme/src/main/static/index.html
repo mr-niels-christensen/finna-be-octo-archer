@@ -16,14 +16,39 @@
 <h2>Content</h2>
 <input type="text" id="content"></input>
 <button onclick="content();">Go</button>
+
+<ul id="options">
+</ul>
+
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 
 <script type="text/javascript">
 function lookup() {
-	var txt = $( '#lookup' ).val();
-	window.location = '/lookup/'+encodeURIComponent(txt);
+	$( "#options" ).empty();
+	var search_for = $( '#lookup' ).val();
+	$.ajax({
+    url: "http://lookup.dbpedia.org/api/search/KeywordSearch",
+    data: {
+      "QueryString" : search_for
+    },
+    dataType: 'json',
+    success: function( response ) {
+      console.dir(response);
+      $.each( response.results, _add_result );
+      //if ( response.results[0] ) {
+      //  $( TODO ).html(response.results[0].description + " <i>[Source: Wikipedia]</i>");
+      //};
+    },
+    timeout: 4000,
+  });
+}
+function _add_result( index, result ) {
+	var content_uri = '/content?iri='+encodeURIComponent(result.uri);
+	$( "#options" ).append( "<li></li>" );
+	$( "#options li:last" ).append( "<a href='" + content_uri + "'></a>" );
+	$( "#options li:last a" ).append( result.label );
 }
 function content() {
 	var txt = $( '#content' ).val();
