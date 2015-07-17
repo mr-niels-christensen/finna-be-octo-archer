@@ -13,12 +13,8 @@
 <input type="text" id="lookup"></input>
 <button onclick="lookup();">Go</button>
 
-<h2>Content</h2>
-<input type="text" id="content"></input>
-<button onclick="content();">Go</button>
-
-<ul id="options">
-</ul>
+<div id="options">
+</div>
 
 </body>
 
@@ -46,13 +42,14 @@ function lookup() {
 }
 function _add_result( index, result ) {
 	var content_uri = '/content?iri='+encodeURIComponent(result.uri);
-	$( "#options" ).append( "<li></li>" );
-	$( "#options li:last" ).append( "<a href='" + content_uri + "'></a>" );
-	$( "#options li:last a" ).append( result.label );
-}
-function content() {
-	var txt = $( '#content' ).val();
-	window.location = '/content?iri='+encodeURIComponent(txt);
+	$( "#options" ).append( "<p></p>" );
+	$( "#options p:last" ).on( "click", function() {
+  	  window.location = content_uri;
+	});
+	$( "#options p:last" ).append( "<b></b>: " );
+	$( "#options p:last b" ).append( result.label );
+	$( "#options p:last" ).append( "<small></small>" );
+	$( "#options p:last small" ).append( result.description );
 }
 </script>
 </html>
