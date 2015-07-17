@@ -13,6 +13,7 @@ handlers:
   upload: static/.*\.(html|js|css|gif)$
 - url: /.*
   script: httpserver.application
+  login: admin
 
 libraries:
 - name: webapp2
