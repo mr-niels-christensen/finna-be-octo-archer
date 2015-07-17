@@ -1,7 +1,6 @@
 from google.appengine.api import users
 import logging
 
-import selectresource
 import briefme
 
 import webapp2
@@ -20,14 +19,15 @@ class _ContentHandler(webapp2.RequestHandler):
     def get(self):
         #Access-Control-Allow-Origin: *
         self.response.headers['Access-Control-Allow-Origin'] = '*'
-        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         result = cache.get_content_for_main_subject(self.request.get('iri'))
         if result is None:
             taskqueue.add(url        = '/add',
                           queue_name = 'addeverything', 
                           params     = {'iri': self.request.get('iri')})
-            result = "Task spawned"
+            self.response.status_int = 204
+            return
         result = json.dumps(result)
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         self.response.write(result)    
 
 class _AddHandler(webapp2.RequestHandler):

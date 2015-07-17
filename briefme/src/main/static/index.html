@@ -9,13 +9,22 @@
 </head>
 
 <body>
-<h2>Lookup</h2>
-<input type="text" id="lookup"></input>
-<button onclick="lookup();">Go</button>
+<table>
+<tr>
+<td>
+	<input type="text" id="lookup"></input>
+	<button onclick="lookup();">Go</button>
 
-<div id="options">
-</div>
-
+	<div id="options">
+	</div>
+</td>
+<td>
+	<div id="show" style="width:300px">
+		
+	</div>
+</td>
+</tr>
+</table>
 </body>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
@@ -23,19 +32,17 @@
 <script type="text/javascript">
 function lookup() {
 	$( "#options" ).empty();
+	$( "#show" ).empty();
 	var search_for = $( '#lookup' ).val();
 	$.ajax({
     url: "http://lookup.dbpedia.org/api/search/KeywordSearch",
     data: {
-      "QueryString" : search_for
+      "QueryString" : search_for,
+      "MaxHits" : 10
     },
     dataType: 'json',
     success: function( response ) {
-      console.dir(response);
       $.each( response.results, _add_result );
-      //if ( response.results[0] ) {
-      //  $( TODO ).html(response.results[0].description + " <i>[Source: Wikipedia]</i>");
-      //};
     },
     timeout: 4000,
   });
@@ -44,12 +51,32 @@ function _add_result( index, result ) {
 	var content_uri = '/content?iri='+encodeURIComponent(result.uri);
 	$( "#options" ).append( "<p></p>" );
 	$( "#options p:last" ).on( "click", function() {
-  	  window.location = content_uri;
+  	  show(content_uri);
 	});
 	$( "#options p:last" ).append( "<b></b>: " );
 	$( "#options p:last b" ).append( result.label );
 	$( "#options p:last" ).append( "<small></small>" );
 	$( "#options p:last small" ).append( result.description );
+}
+function show(uri){
+	$.ajax({
+    url: uri,
+    dataType: 'json',
+	statusCode: {
+    	204: function( response ) {
+      			$( "#show" ).append( "<p>Working...</p>" );
+      			setTimeout(function(){show(uri);} , 500 );
+    	},
+    	200: function( response ) {
+      			$( "#show" ).empty();
+      			$.each( response, _show_abstract );
+    	}
+    },
+    timeout: 1500,
+  });	
+}
+function _show_abstract( index, abstract ) {
+	$( "#show" ).append( "<p>" + abstract + "</p>" )
 }
 </script>
 </html>
