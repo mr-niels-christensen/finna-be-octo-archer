@@ -19,21 +19,21 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
 def brief(iri):
+    cache.set_content_for_main_subject(iri, "Working...")
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(iri))
-    result = {
-        'abstract' : 'Sorry, no description.',
-        'friends' : []
-    }
-    cache.set_content_for_main_subject(iri, result)
-    for abstract in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
-        if detect(abstract) == 'en':
-            result['abstract'] = abstract
     total = Counter()
     _add_immediate_connections(rdflib.URIRef(iri), g, total)
     _add_friends(list(g.objects(rdflib.URIRef(iri), DCTERMS.subject)), total)
-    result['friends'] = total.most_common(20)
+    result = [_en_abstract_of(friend) for (friend, _score) in total.most_common(10)]
     cache.set_content_for_main_subject(iri, result)
+
+def _en_abstract_of(uri):
+    g = rdflib.Graph()
+    g.parse(format = 'n3', data = cache.get_uri(uri))
+    for abstract in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
+        if detect(abstract) == 'en':
+            return abstract
 
 def _add_immediate_connections(subject, g, total):
     for pred in _PEOPLE_NW_PREDICATES:
