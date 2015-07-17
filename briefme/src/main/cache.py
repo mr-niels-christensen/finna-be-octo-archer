@@ -1,5 +1,6 @@
 from google.appengine.api import memcache
 from urllib2 import urlopen, Request
+import logging
 
 def get_content_for_main_subject(uri):
     return memcache.get('content ' + uri)
@@ -15,9 +16,11 @@ def get_uri(uri):
     return result
 
 def _load(uri):
+    logging.info(u"Loading {}".format(unicode(uri)))
     myheaders = dict()
     myheaders['Accept'] = (
-        'application/rdf+xml,text/rdf+n3;q=0.9,' +
+        'text/rdf+n3;q=0.9,' +
+        #'application/rdf+xml;q=0.8,'
         'application/xhtml+xml;q=0.5, */*;q=0.1')
     req = Request(unicode(uri), None, myheaders)
     file = urlopen(req)

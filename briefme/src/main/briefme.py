@@ -20,7 +20,7 @@ _META_PREDICATES = [RDF.type, #problematic
 
 def brief(iri):
     g = rdflib.Graph()
-    g.parse(data = cache.get_uri(iri))
+    g.parse(format = 'n3', data = cache.get_uri(iri))
     result = {
         'abstract' : 'Sorry, no description.',
         'friends' : []
@@ -45,7 +45,7 @@ def _add_friends(dc_classes, total):
     for dc_class in dc_classes:
         try:
             dc_class_graph = rdflib.Graph()
-            dc_class_graph.parse(data = cache.get_uri(dc_class))
+            dc_class_graph.parse(format = 'n3', data = cache.get_uri(dc_class))
             for friend in dc_class_graph.subjects(DCTERMS.subject, dc_class):
                 total[friend] += 1
         except Exception as e:
