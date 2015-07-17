@@ -42,7 +42,6 @@ def _add_immediate_connections(subject, g, total):
                 total[related] += 1
 
 def _add_friends(dc_classes, total):
-    dc_classes = dc_classes[:12]
     for dc_class in dc_classes:
         try:
             dc_class_graph = rdflib.Graph()
