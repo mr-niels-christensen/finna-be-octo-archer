@@ -8,9 +8,11 @@ handlers:
 - url: /$
   static_files: static/index.html
   upload: static/index.html
+  login: required
 - url: /(.*\.(html|js|css|gif))$
   static_files: static/\1
   upload: static/.*\.(html|js|css|gif)$
+  login: required
 - url: /.*
   script: httpserver.application
   login: admin
