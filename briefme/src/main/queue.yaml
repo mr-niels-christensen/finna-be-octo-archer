@@ -4,3 +4,6 @@ queue:
 - name: addeverything
   rate: 1/m
   max_concurrent_requests: 1
+  retry_parameters:
+    min_backoff_seconds: 20
+

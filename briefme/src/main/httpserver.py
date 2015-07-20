@@ -9,49 +9,36 @@ import json
 import cache
 from google.appengine.api import taskqueue
 
-def content_route():
-    return webapp2.Route(r'/content', handler=_ContentHandler, name='content')
-
-def add_route():
-    return webapp2.Route(r'/add', handler=_AddHandler, name='add')
-
-class _ContentHandler(webapp2.RequestHandler):
-    def get(self):
-        #Access-Control-Allow-Origin: *
+class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
+    def get(self, id):
+        #CORS: Allow JSON request from Javascript anywhere
         self.response.headers['Access-Control-Allow-Origin'] = '*'
-        result = cache.get_content_for_main_subject(self.request.get('iri'))
+        url = 'http://dbpedia.org/resource/{}'.format(id)
+        result = cache.get_content_for_main_subject(url)
         if result is None:
-            taskqueue.add(url        = '/add',
+            taskqueue.add(url        = '/create-item',
                           queue_name = 'addeverything', 
-                          params     = {'iri': self.request.get('iri')})
+                          params     = {'url': url,
+                                        'user_id' : users.get_current_user().user_id(),}
+
+                         )
+            self.response.status_int = 204
+            return
+        if result == "":
             self.response.status_int = 204
             return
         result = json.dumps(result)
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         self.response.write(result)    
 
-class _AddHandler(webapp2.RequestHandler):
+class _CreateHandler(webapp2.RequestHandler):
     def post(self):
-        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-        briefme.brief(self.request.get('iri'))
+        self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
+        briefme.brief(self.request.get('url'))
         self.response.write("OK")    
 
-class MainPage(webapp2.RequestHandler):
-    def get(self):
-        user = users.get_current_user()
-        if user:
-            if users.is_current_user_admin():
-                self.response.out.write(
-                    'Hi Admin'
-                )
-            else:
-                self.response.out.write(
-                    'Hi non-admin {}. Nothing to see here.'.format(user.nickname())
-                )
-        else:
-            self.redirect(users.create_login_url(self.request.uri))
-
 application = webapp2.WSGIApplication([
-    content_route(),
-    add_route(),
-], debug=True) #debug=true means stack traces in browserapplication = webapp.WSGIApplication([('/', MainPage), ('/_ah/xmpp/message/chat/', ChatReceiver)], debug=True)
+    webapp2.Route(r'/get-item/dbpedia-resource/<id>', handler=_GetItemDbpediaResourceHandler, name='dbpedia-resource'),
+    webapp2.Route(r'/create-item', handler=_CreateHandler, name='create-item'),
+], debug=True) #debug=true means stack traces in browser
+

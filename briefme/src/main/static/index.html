@@ -48,7 +48,7 @@ function lookup() {
   });
 }
 function _add_result( index, result ) {
-	var content_uri = '/content?iri='+encodeURIComponent(result.uri);
+	var content_uri = '/get-item/dbpedia-resource/'+encodeURIComponent(result.uri.split("/").pop());
 	$( "#options" ).append( "<p></p>" );
 	$( "#options p:last" ).on( "click", function() {
   	  show(content_uri);

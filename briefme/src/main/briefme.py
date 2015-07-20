@@ -19,6 +19,7 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
 def brief(iri):
+    cache.set_content_for_main_subject(iri, "")
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(iri))
     total = Counter()
