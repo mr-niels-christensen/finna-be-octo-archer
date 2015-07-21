@@ -1,0 +1,15 @@
+.ajaxloading {
+    display:    block;
+    visibility: hidden;
+    min-height: 40px;
+    width:      100%;
+    background: url('./ajax-loader.gif') 
+                50% 30% 
+                no-repeat;
+}
+
+/* Anytime the body has the loading class, our
+   modal element will be visible */
+body.loading .ajaxloading {
+    visibility: visible;
+}
