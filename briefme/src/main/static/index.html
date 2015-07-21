@@ -65,7 +65,7 @@ function show(uri){
 	statusCode: {
     	204: function( response ) {
       			$( "#show" ).append( "<p>Working...</p>" );
-      			setTimeout(function(){show(uri);} , 500 );
+      			setTimeout(function(){show(uri);} , 2500 );
     	},
     	200: function( response ) {
       			$( "#show" ).empty();
