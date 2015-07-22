@@ -1,15 +1,46 @@
-.ajaxloading {
-    display:    block;
-    visibility: hidden;
-    min-height: 40px;
-    width:      100%;
-    background: url('./ajax-loader.gif') 
-                50% 30% 
-                no-repeat;
+#progressbar {
+	visibility: hidden;
+	position:relative;
+	width:200px;
+	height:15px;
+	padding:0px;
+	border-top:1px solid #000000;
+	border-bottom:1px solid #000000;
 }
 
-/* Anytime the body has the loading class, our
-   modal element will be visible */
-body.loading .ajaxloading {
+body.working #progressbar {
     visibility: visible;
+}
+
+#gradient {
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:200px;
+	height:15px;
+	background-image:url("gradient.gif");
+	background-repeat:no-repeat;
+}
+
+#mask {
+	position:absolute;
+	font-size:1px;
+	width:200px;
+	height:15px;
+	background-color:#FFFFFF;
+	left:0px;
+	top:0px;
+}
+
+#progressIndicator {
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:200px;
+	height:15px;
+	font-family:verdana;
+	font-weight:bold;
+	color:#C0C0C0;
+	font-size:10pt;
+	text-align:center;
 }
