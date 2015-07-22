@@ -20,23 +20,26 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/office'),
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
-def brief(iri):
+def brief(dbpedia_item):
     uuid = uuid4()
-    logging.debug('BEGIN brief {} for {}'.format(uuid, iri))
-    cache.set_content_for_main_subject(iri, "")
+    logging.debug('BEGIN brief {} for {}'.format(uuid, dbpedia_item))
     g = rdflib.Graph()
-    logging.debug('STATUS brief {} for {}: ready to parse'.format(uuid, iri))
-    g.parse(format = 'n3', data = cache.get_uri(iri))
+    logging.debug('STATUS brief {} for {}: ready to parse'.format(uuid, dbpedia_item))
+    g.parse(format = 'n3', data = cache.get_uri(dbpedia_item.external_url()))
+    dbpedia_item.set_progress(0.1)
     total = Counter()
-    logging.debug('STATUS brief {} for {}: ready to _add_immediate_connections'.format(uuid, iri))
-    _add_immediate_connections(rdflib.URIRef(iri), g, total)
-    logging.debug('STATUS brief {} for {}: ready to _add_friends'.format(uuid, iri))
-    _add_friends(list(g.objects(rdflib.URIRef(iri), DCTERMS.subject)), total)
-    logging.debug('STATUS brief {} for {}: ready to get abstracts'.format(uuid, iri))
+    logging.debug('STATUS brief {} for {}: ready to _add_immediate_connections'.format(uuid, dbpedia_item))
+    _add_immediate_connections(rdflib.URIRef(dbpedia_item.external_url()), g, total)
+    dbpedia_item.set_progress(0.3)
+    logging.debug('STATUS brief {} for {}: ready to _add_friends'.format(uuid, dbpedia_item))
+    _add_friends(list(g.objects(rdflib.URIRef(dbpedia_item.external_url()), DCTERMS.subject)), total)
+    dbpedia_item.set_progress(0.8)
+    logging.debug('STATUS brief {} for {}: ready to get abstracts'.format(uuid, dbpedia_item))
     result = [_en_abstract_of(friend) for (friend, _score) in total.most_common(10)]
-    logging.debug('STATUS brief {} for {}: ready to set content'.format(uuid, iri))    
-    cache.set_content_for_main_subject(iri, result)
-    logging.debug('END brief {} for {}'.format(uuid, iri))
+    dbpedia_item.set_progress(0.9)
+    logging.debug('STATUS brief {} for {}: ready to set content'.format(uuid, dbpedia_item))    
+    dbpedia_item.set_data(result)
+    logging.debug('END brief {} for {}'.format(uuid, dbpedia_item))
 
 def _en_abstract_of(uri):
     g = rdflib.Graph()

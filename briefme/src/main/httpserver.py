@@ -16,25 +16,16 @@ class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
         self.response.headers['Access-Control-Allow-Origin'] = '*'
         uuid = uuid4()
         logging.debug('BEGIN request {} for {}'.format(uuid, id))
-        item = ItemDbpediaResource(id)
-        if item.is_ready():
-            logging.debug('END request {} for {}, was ready'.format(uuid, id))
-            self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-            item.write_as_json(self.response)
-            return
-        if item.is_in_progress():
-            logging.debug('END request {} for {}, task in progess'.format(uuid, id))
-            self.response.status_int = 204
-            return
-        item.create(users.get_current_user().user_id())
-        logging.debug('END request {} for {}, task requested'.format(uuid, id))
-        self.response.status_int = 204
+        item = ItemDbpediaResource(id, users.get_current_user().user_id())
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        item.write_as_json(self.response)
+        logging.debug('END request {} for {}, was ready'.format(uuid, id))
         return
 
 class _CreateHandler(webapp2.RequestHandler):
     def post(self):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
-        briefme.brief(self.request.get('url'))
+        briefme.brief(ItemDbpediaResource.from_request(self.request))
         self.response.write("OK")    
 
 application = webapp2.WSGIApplication([

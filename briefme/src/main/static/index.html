@@ -92,15 +92,14 @@ function show(uri){
 	$.ajax({
     url: uri,
     dataType: 'json',
-	statusCode: {
-    	204: function( response ) {
-      			setTimeout(function(){show(uri);} , 2500 );
-    	},
-    	200: function( response ) {
-      			$( "#show" ).empty();
-      			$.each( response, _show_abstract );
-    	}
-    },
+	success: function( response ) {
+				if (response.ready) {
+	      			$( "#show" ).empty();
+	      			$.each( response.data, _show_abstract );
+				} else {
+					setTimeout(function(){show(uri);} , 2500 );//TODO use progress
+				};
+			},
     timeout: 1500,
   });	
 }

@@ -3,14 +3,6 @@ from urllib2 import urlopen, Request
 from google.appengine.api import urlfetch
 import logging
 
-def get_content_for_main_subject(uri):
-    uri = unicode(uri)
-    return memcache.get('content ' + uri)
-
-def set_content_for_main_subject(uri, v):
-    uri = unicode(uri)
-    memcache.set('content ' + uri, v, 6000)
-
 def get_uri(uri):
     uri = unicode(uri)
     result = memcache.get('zuri ' + uri)
