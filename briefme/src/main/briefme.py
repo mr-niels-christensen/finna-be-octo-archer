@@ -20,6 +20,8 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/office'),
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
+#TODO: Add more documentation
+#TODO: Break down progress, right now it tends to stick at 30% for a long time
 def brief(dbpedia_item):
     uuid = uuid4()
     logging.debug('BEGIN brief {} for {}'.format(uuid, dbpedia_item))
