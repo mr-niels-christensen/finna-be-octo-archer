@@ -4,7 +4,7 @@ from google.appengine.api import memcache
 import logging
 
 _INITIAL_STATE = {'ready' : False,
-                  'progress' : 0, }
+                  'progress' : 0.01, }
 
 class ItemDbpediaResource(object):
     def __init__(self, id, user_id):
