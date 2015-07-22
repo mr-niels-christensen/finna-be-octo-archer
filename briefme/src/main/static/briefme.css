@@ -18,7 +18,7 @@ body.working #progressbar {
 	left:0px;
 	width:200px;
 	height:15px;
-	background: linear-gradient(to right, red , green);
+	background: linear-gradient(to right, lightskyblue , lime);
 }
 
 #mask {
@@ -39,7 +39,7 @@ body.working #progressbar {
 	height:15px;
 	font-family:verdana;
 	font-weight:bold;
-	color:#C0C0C0;
+	color:black
 	font-size:10pt;
 	text-align:center;
 }

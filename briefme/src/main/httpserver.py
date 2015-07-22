@@ -19,7 +19,7 @@ class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
         item = ItemDbpediaResource(id, users.get_current_user().user_id())
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         item.write_as_json(self.response)
-        logging.debug('END request {} for {}, was ready'.format(uuid, id))
+        logging.debug('END request {} for {}'.format(uuid, id))
         return
 
 class _CreateHandler(webapp2.RequestHandler):

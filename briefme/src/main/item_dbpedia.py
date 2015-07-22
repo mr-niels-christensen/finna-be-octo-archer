@@ -18,7 +18,7 @@ class ItemDbpediaResource(object):
         return ItemDbpediaResource(request.get('id'), request.get('user_id'))
         
     def external_url(self):
-        return 'http://dbpedia.org/resource/{}'.format(self._id)
+        return u'http://dbpedia.org/resource/{}'.format(self._id)
 
     def _create(self):
         memcache.set(self._id, _INITIAL_STATE, 6000)
