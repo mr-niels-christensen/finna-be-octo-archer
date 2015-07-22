@@ -18,8 +18,7 @@ body.working #progressbar {
 	left:0px;
 	width:200px;
 	height:15px;
-	background-image:url("gradient.gif");
-	background-repeat:no-repeat;
+	background: linear-gradient(to right, red , green);
 }
 
 #mask {
