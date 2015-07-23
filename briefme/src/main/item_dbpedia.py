@@ -2,6 +2,7 @@ import json
 from google.appengine.api import taskqueue
 from google.appengine.api import memcache
 import logging
+import rdflib
 
 _INITIAL_STATE = {'ready' : False,
                   'progress' : 0.01, }
@@ -19,6 +20,9 @@ class ItemDbpediaResource(object):
         
     def external_url(self):
         return u'http://dbpedia.org/resource/{}'.format(self._id)
+
+    def uriref(self):
+        return rdflib.URIRef(self.external_url())
 
     def _create(self):
         memcache.set(self._id, _INITIAL_STATE, 6000)

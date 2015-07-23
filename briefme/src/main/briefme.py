@@ -20,15 +20,17 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/office'),
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
-#TODO: Add more documentation
+#TODO: Add more documentation, and get rid of briefme.py
 def brief(dbpedia_item):
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(dbpedia_item.external_url()))
+    #for pred in g.predicates(subject = dbpedia_item.uriref()):
+    #    logging.debug(pred)
     dbpedia_item.set_progress(0.1)
     total = Counter()
-    _add_immediate_connections(rdflib.URIRef(dbpedia_item.external_url()), g, total)
+    _add_immediate_connections(dbpedia_item.uriref(), g, total)
     dbpedia_item.set_progress(0.2)
-    _add_friends(list(g.objects(rdflib.URIRef(dbpedia_item.external_url()), DCTERMS.subject)), total, dbpedia_item)
+    _add_friends(list(g.objects(dbpedia_item.uriref(), DCTERMS.subject)), total, dbpedia_item)
     dbpedia_item.set_progress(0.6)
     result = [_en_abstract_of(friend, index, dbpedia_item) for (index, (friend, _score)) in enumerate(total.most_common(10))]
     dbpedia_item.set_progress(0.9)
