@@ -35,6 +35,7 @@ function _add_result( index, result ) {
 	$( "#options tr:last small" ).append( _sentence(result.description) );
   $( "#options tr:last" ).append( '<td><button type="button" class="btn btn-success">Add</button></td>' );
   $( "#options tr:last button" ).on( "click", function() {
+      $(this).prop('disabled', true);
       show(content_uri);
   });
 }
