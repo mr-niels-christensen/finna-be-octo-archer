@@ -25,7 +25,11 @@ class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
 class _CreateHandler(webapp2.RequestHandler):
     def post(self):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
-        briefme.brief(ItemDbpediaResource.from_request(self.request))
+        item = ItemDbpediaResource.from_request(self.request)
+        try:
+            briefme.brief(item)
+        except Exception as e:
+            item.set_failed(e)
         self.response.write("OK")    
 
 application = webapp2.WSGIApplication([

@@ -49,6 +49,14 @@ class ItemDbpediaResource(object):
         state['data'] = data
         memcache.set(self._id, state, 6000)
 
+    def set_thumbnail(self, thumbnail_url):
+        state = memcache.get(self._id)
+        state['thumbnail'] = thumbnail_url
+        memcache.set(self._id, state, 6000)
+
+    def set_failed(self, exception):
+        self.set_data(['Sorry, {}'.format(exception)])
+
     def __str__(self):
         return self._id
 

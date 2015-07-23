@@ -20,13 +20,15 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/office'),
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
+_THUMBNAIL_PREDICATE = rdflib.URIRef('http://dbpedia.org/ontology/thumbnail')
+
 #TODO: Add more documentation, and get rid of briefme.py
 def brief(dbpedia_item):
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(dbpedia_item.external_url()))
-    #for pred in g.predicates(subject = dbpedia_item.uriref()):
-    #    logging.debug(pred)
     dbpedia_item.set_progress(0.1)
+    thumbnail = g.value(subject = dbpedia_item.uriref(), predicate = _THUMBNAIL_PREDICATE)
+    dbpedia_item.set_thumbnail(thumbnail)
     total = Counter()
     _add_immediate_connections(dbpedia_item.uriref(), g, total)
     dbpedia_item.set_progress(0.2)

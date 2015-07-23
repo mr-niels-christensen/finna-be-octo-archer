@@ -55,6 +55,9 @@ function show(uri){
 					$body.removeClass("working");
 					reset_progress_bar();
 	      			$( "#show" ).empty();
+	      			if (response.thumbnail) {
+	      				$ ( '#show' ).append('<p><img src="' + response.thumbnail + '"/></p>')
+	      			};
 	      			$.each( response.data, _show_abstract );
 				} else {
 					setProgress(response.progress);
