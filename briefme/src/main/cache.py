@@ -15,4 +15,6 @@ _ACCEPT = 'text/rdf+n3;q=0.9,application/xhtml+xml;q=0.5, */*;q=0.1'
 
 def _load(uri):
     response = urlfetch.fetch(uri, headers = {'Accept' : _ACCEPT})
+    if response.status_code != 200:
+        raise Exception('the Wikipedia database is unavailable ({}) at the moment.'.format(response.status_code))
     return response.content
