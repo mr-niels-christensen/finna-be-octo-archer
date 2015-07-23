@@ -32,9 +32,9 @@ function _add_result( index, result ) {
 	$( "#options tr:last" ).on( "click", function() {
   	  show(content_uri);
 	});
-	$( "#options tr:last" ).append( "<th></th>" );
-	$( "#options tr:last th" ).append( result.label );
-	$( "#options tr:last" ).append( "<td><small></small></td>" );
+	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
+	$( "#options tr:last b" ).append( result.label );
+	$( "#options tr:last td" ).append( "<p><small></small></p>" );
 	$( "#options tr:last small" ).append( _sentence(result.description) );
 }
 
