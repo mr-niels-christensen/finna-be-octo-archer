@@ -29,13 +29,14 @@ function lookup() {
 function _add_result( index, result ) {
 	var content_uri = '/get-item/dbpedia-resource/' + encodeURIComponent(result.uri.split("/").pop());
 	$( "#options" ).append( "<tr></tr>" );
-	$( "#options tr:last" ).on( "click", function() {
-  	  show(content_uri);
-	});
 	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
 	$( "#options tr:last b" ).append( result.label );
 	$( "#options tr:last td" ).append( "<p><small></small></p>" );
 	$( "#options tr:last small" ).append( _sentence(result.description) );
+  $( "#options tr:last" ).append( '<td><button type="button" class="btn btn-success">Add</button></td>' );
+  $( "#options tr:last button" ).on( "click", function() {
+      show(content_uri);
+  });
 }
 
 //Return the first sentence of the textual descrition,

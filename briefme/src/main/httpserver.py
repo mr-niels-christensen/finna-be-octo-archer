@@ -29,6 +29,7 @@ class _CreateHandler(webapp2.RequestHandler):
         try:
             briefme.brief(item)
         except Exception as e:
+            logging.warn('Failed to process {}'.format(item), exc_info = True);
             item.set_failed(e)
         self.response.write("OK")    
 
