@@ -12,6 +12,7 @@ function show(uri){
     dataType: 'json',
 	success: function( response ) {
 				if (response.ready) {
+					//TODO: Use HTML local state or load from separate URL, do not store all data in URL
 	      			appstate_update({show:'item',item:response});
 				} else {
 					setProgress(response.progress);
