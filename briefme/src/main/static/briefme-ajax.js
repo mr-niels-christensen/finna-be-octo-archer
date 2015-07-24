@@ -4,11 +4,12 @@ $body = $("body");
 //Request abstracts for a DBpedia resource,
 //then wait for them to be ready (updating progress bar),
 //then display them on #show
-function show(uri){
+function show(id, is_recursive_call){
 	$body.addClass("working");
 	//TODO: Handle failures
 	$.ajax({
-    url: uri,
+    url: ((is_recursive_call) ? '/get-meta-item/dbpedia-resource/' :'/add-to-feed/') + encodeURIComponent(id),
+    method: (is_recursive_call) ? 'GET' : 'POST',
     dataType: 'json',
 	success: function( response ) {
 				if (response.ready) {
@@ -18,7 +19,7 @@ function show(uri){
 				} else {
 					setProgress(response.progress);
 					//TODO: Use comet long polling
-					setTimeout(function(){show(uri);} , 500 );
+					setTimeout(function(){show(id, true);} , 500 );
 				};
 			},
     timeout: 1500,

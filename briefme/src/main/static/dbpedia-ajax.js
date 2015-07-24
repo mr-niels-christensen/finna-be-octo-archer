@@ -22,7 +22,7 @@ function lookup(show, search_for) {
 
 //Add an individual DBpedia resource to the table in #options
 function _add_result( index, result ) {
-	var content_uri = '/get-meta-item/dbpedia-resource/' + encodeURIComponent(result.uri.split("/").pop());
+  var id = result.uri.split("/").pop();
 	$( "#options" ).append( "<tr></tr>" );
 	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
 	$( "#options tr:last b" ).append( result.label );
@@ -31,7 +31,7 @@ function _add_result( index, result ) {
   $( "#options tr:last" ).append( '<td><button type="button" class="btn btn-success">Add</button></td>' );
   $( "#options tr:last button" ).on( "click", function() {
       $(this).prop('disabled', true);
-      show(content_uri);
+      show(id, false);
   });
 }
 
