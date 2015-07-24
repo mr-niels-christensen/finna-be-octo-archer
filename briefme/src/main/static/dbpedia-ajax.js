@@ -22,7 +22,7 @@ function lookup(show, search_for) {
 
 //Add an individual DBpedia resource to the table in #options
 function _add_result( index, result ) {
-	var content_uri = '/get-item/dbpedia-resource/' + encodeURIComponent(result.uri.split("/").pop());
+	var content_uri = '/get-meta-item/dbpedia-resource/' + encodeURIComponent(result.uri.split("/").pop());
 	$( "#options" ).append( "<tr></tr>" );
 	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
 	$( "#options tr:last b" ).append( result.label );

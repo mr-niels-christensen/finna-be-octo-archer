@@ -32,8 +32,11 @@ class ItemDbpediaResource(object):
                             'user_id' : self._user_id,}
              )
 
-    def write_as_json(self, writer):
+    def write_as_json(self, writer, meta_only = False):
         result = memcache.get(self._id)
+        result['id'] = self._id
+        if meta_only and 'data' in result:
+            del result['data']
         result = json.dumps(result)
         writer.write(result)
 
