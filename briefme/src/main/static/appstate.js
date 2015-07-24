@@ -25,7 +25,3 @@ function _appstate_apply(f, arr_of_keys, event) {
 		return event.getState( key );
 	}))
 }
-
-//Make this the very last JS to load, if you need appstate for initialization
-//$(window).trigger( 'hashchange' );
-

@@ -1,8 +1,9 @@
-//Use string from #search to search DBpedia for resources
 //List found resources in the table in #options
-function lookup(search_for) {
-	$( "#options" ).empty();
-	$( "#show" ).empty();
+function lookup(show, search_for) {
+  if (show != 'hits') {
+    return;
+  }
+	$( "#canvas" ).empty();
 	//TODO: Handle failures
 	$.ajax({
     url: "http://lookup.dbpedia.org/api/search/KeywordSearch",
@@ -12,6 +13,7 @@ function lookup(search_for) {
     },
     dataType: 'json',
     success: function( response ) {
+      $( '#canvas' ).append('<table id="options" class="table table-striped table-hover"></table>');
       $.each( response.results, _add_result );
     },
     timeout: 4000,
@@ -60,9 +62,9 @@ function _sentence(text) {
 //Hook the lookup form up to the lookup() function
 $( "#lookup" ).submit(function( event ) {
   event.preventDefault();
-  appstate_update({query : $( '#query' ).val()});
+  appstate_update({show:'hits', query : $( '#query' ).val()});
 });
 
-appstate_on_update(lookup, ['query']);
+appstate_on_update(lookup, ['show', 'query']);
 
 
