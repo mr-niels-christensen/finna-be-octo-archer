@@ -13,9 +13,12 @@ handlers:
   static_files: static/\1
   upload: static/.*\.(html|js|css|gif)$
   login: required
-- url: /.*
+- url: /create-item
   script: httpserver.application
   login: admin
+- url: /.*
+  script: httpserver.application
+  login: required
 
 libraries:
 - name: webapp2
