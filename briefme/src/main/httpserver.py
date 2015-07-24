@@ -8,18 +8,14 @@ import json
 
 import cache
 from item_dbpedia import ItemDbpediaResource
-from uuid import uuid4
 
 class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
     def get(self, id):
         #CORS: Allow JSON request from Javascript anywhere
         self.response.headers['Access-Control-Allow-Origin'] = '*'
-        uuid = uuid4()
-        logging.debug('BEGIN request {} for {}'.format(uuid, id))
         item = ItemDbpediaResource(id, users.get_current_user().user_id())
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         item.write_as_json(self.response)
-        logging.debug('END request {} for {}'.format(uuid, id))
         return
 
 class _CreateHandler(webapp2.RequestHandler):

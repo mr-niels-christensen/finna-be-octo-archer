@@ -1,15 +1,8 @@
-//Hook the lookup form up to the lookup() function
-$( "#lookup" ).submit(function( event ) {
-  event.preventDefault();
-  lookup();
-});
-
 //Use string from #search to search DBpedia for resources
 //List found resources in the table in #options
-function lookup() {
+function lookup(search_for) {
 	$( "#options" ).empty();
 	$( "#show" ).empty();
-	var search_for = $( '#search' ).val();
 	//TODO: Handle failures
 	$.ajax({
     url: "http://lookup.dbpedia.org/api/search/KeywordSearch",
@@ -63,4 +56,13 @@ function _sentence(text) {
     return result.substr(0,147) + "...";
   }
 }
+
+//Hook the lookup form up to the lookup() function
+$( "#lookup" ).submit(function( event ) {
+  event.preventDefault();
+  appstate_update({query : $( '#query' ).val()});
+});
+
+appstate_on_update(lookup, ['query']);
+
 
