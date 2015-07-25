@@ -33,6 +33,7 @@ function _add_result( index, result ) {
       $(this).prop('disabled', true);
       show(id, false);
   });
+  $( "#options tr:last" ).append('<td id="' + id + '"><div class="progressbar"><div class="gradient"></div><div class="mask"></div><div class="progressIndicator">0%</div></div></td>');
 }
 
 //Return the first sentence of the textual descrition,

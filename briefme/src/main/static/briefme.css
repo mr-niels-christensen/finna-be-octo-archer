@@ -1,42 +1,45 @@
-#progressbar {
+.progressbar {
 	visibility: hidden;
 	position:relative;
-	width:200px;
-	height:15px;
 	padding:0px;
 	border-top:1px solid #000000;
 	border-bottom:1px solid #000000;
+	min-width: 150px;
+	min-height: 15px;
 }
 
-body.working #progressbar {
+.working .progressbar {
     visibility: visible;
 }
 
-#gradient {
+.gradient {
 	position:absolute;
 	top:0px;
 	left:0px;
-	width:200px;
-	height:15px;
+	width:100%;
+	height:100%;
 	background: linear-gradient(to right, lightskyblue , lime);
 }
 
-#mask {
+.mask {
 	position:absolute;
 	font-size:1px;
-	width:200px;
-	height:15px;
+	width:100%;
+	height:100%;
 	background-color:#FFFFFF;
 	left:0px;
 	top:0px;
 }
 
-#progressIndicator {
+.complete .mask {
+	display: none;
+}
+.progressIndicator {
 	position:absolute;
 	top:0px;
 	left:0px;
-	width:200px;
-	height:15px;
+	width:100%;
+	height:100%;
 	font-family:verdana;
 	font-weight:bold;
 	color:black

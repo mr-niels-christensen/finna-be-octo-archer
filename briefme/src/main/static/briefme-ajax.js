@@ -5,7 +5,9 @@ $body = $("body");
 //then wait for them to be ready (updating progress bar),
 //then display them on #show
 function show(id, is_recursive_call){
-	$body.addClass("working");
+	if (!is_recursive_call){
+		setProgress(id, 0);	
+	} 
 	//TODO: Handle failures
 	$.ajax({
     url: ((is_recursive_call) ? '/get-meta-item/dbpedia-resource/' :'/add-to-feed/') + encodeURIComponent(id),
@@ -17,7 +19,7 @@ function show(id, is_recursive_call){
 					var _url = '/get-item/dbpedia-resource/' + encodeURIComponent(response.id);
 	      			appstate_update({show:'item',url:_url});
 				} else {
-					setProgress(response.progress);
+					setProgress(id, response.progress);
 					//TODO: Use comet long polling
 					setTimeout(function(){show(id, true);} , 500 );
 				};
