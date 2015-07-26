@@ -6,7 +6,7 @@ $body = $("body");
 //then display them on #show
 function show(id, is_recursive_call){
 	if (!is_recursive_call){
-		setProgress(id, 0);	
+		progress_set(id, 0);	
 	} 
 	//TODO: Handle failures
 	$.ajax({
@@ -15,11 +15,10 @@ function show(id, is_recursive_call){
     dataType: 'json',
 	success: function( response ) {
 				if (response.ready) {
-					//TODO: Use HTML local state or load from separate URL, do not store all data in URL
 					var _url = '/get-item/dbpedia-resource/' + encodeURIComponent(response.id);
 	      			appstate_update({show:'item',url:_url});
 				} else {
-					setProgress(id, response.progress);
+					progress_set(id, response.progress);
 					//TODO: Use comet long polling
 					setTimeout(function(){show(id, true);} , 500 );
 				};
@@ -47,7 +46,7 @@ function _show_item(show, url) {
     timeout: 1500,
 	});	
 	$body.removeClass("working");
-	reset_progress_bar();
+	progress_reset();
 }
 
 //Add an individual abstract to #show

@@ -1,7 +1,12 @@
 //TODO: Give the progress bar variable size, it's fixed to 200px right now
 
+//Return HTML representing a progress bar with the given id
+function progress_html(id) {
+	return '<td id="' + id + '"><div class="progressbar"><div class="gradient"></div><div class="mask"></div><div class="progressIndicator">0%</div></div></td>';
+}
+
 //Put the progress bar back to 0%
-function reset_progress_bar(id) {
+function progress_reset(id) {
 	var parent = $("#" + id);
 	parent.removeClass("working");
 	parent.removeClass("complete");
@@ -12,8 +17,7 @@ function reset_progress_bar(id) {
 }
 
 //Set the progress bar to the given fraction between 0 and 1
-function setProgress(id, fraction) {
-	//TODO Does not work with e.g. id="George_H._W._Bush" because the "." annoys jquery selectors
+function progress_set(id, fraction) {
 	var parent = $('td[id="' + id + '"]');//ids may have '.'s in them, so don't try $('#'+id)
 	parent.addClass("working");
 	var pct = Math.floor(fraction*100);
@@ -24,10 +28,4 @@ function setProgress(id, fraction) {
 	}
 	parent.find(".mask").css("left", pct + "%");
 	parent.find(".mask").width((100 - pct) + "%");
-	//var width = parent.width();
-	//var newLeft = Math.floor(fraction*width);
-	//var newWidth = width - newLeft;
-	//document.getElementById("mask").style.left = curLeft + "px";
-	//if(parseInt(document.getElementById("mask").offsetWidth)>10)document.getElementById("mask").style.width = curWidth + "px";
-
 }
