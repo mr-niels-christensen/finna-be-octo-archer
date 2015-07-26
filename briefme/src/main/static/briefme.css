@@ -2,8 +2,8 @@
 	visibility: hidden;
 	position:relative;
 	padding:0px;
-	border-top:1px solid #000000;
-	border-bottom:1px solid #000000;
+	/*border-top:1px solid #000000;
+	border-bottom:1px solid #000000;*/
 	min-width: 150px;
 	min-height: 15px;
 }

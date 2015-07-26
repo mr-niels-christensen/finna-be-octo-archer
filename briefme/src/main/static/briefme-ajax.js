@@ -20,10 +20,10 @@ function show(id, is_recursive_call){
 				} else {
 					progress_set(id, response.progress);
 					//TODO: Use comet long polling
-					setTimeout(function(){show(id, true);} , 500 );
+					setTimeout(function(){show(id, true);} , 1000 );
 				};
 			},
-    timeout: 1500,
+    timeout: 2500,
   });	
 }
 
@@ -43,7 +43,7 @@ function _show_item(show, url) {
 		$.each( response.data, _show_abstract );
 				
 	},
-    timeout: 1500,
+    timeout: 2500,
 	});	
 	$body.removeClass("working");
 	progress_reset();
