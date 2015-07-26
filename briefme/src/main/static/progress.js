@@ -14,7 +14,7 @@ function reset_progress_bar(id) {
 //Set the progress bar to the given fraction between 0 and 1
 function setProgress(id, fraction) {
 	//TODO Does not work with e.g. id="George_H._W._Bush" because the "." annoys jquery selectors
-	var parent = $("#" + id);
+	var parent = $('td[id="' + id + '"]');//ids may have '.'s in them, so don't try $('#'+id)
 	parent.addClass("working");
 	var pct = Math.floor(fraction*100);
 	parent.find(".progressIndicator").html(pct + "%");
