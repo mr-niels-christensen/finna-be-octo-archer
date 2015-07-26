@@ -19,7 +19,6 @@ function show(id, is_recursive_call){
 	      			appstate_update({show:'item',url:_url});
 				} else {
 					progress_set(id, response.progress);
-					return;
 					//TODO: Use comet long polling
 					setTimeout(function(){show(id, true);} , 1000 );
 				};
