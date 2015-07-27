@@ -46,8 +46,6 @@ function _show_item(show, url) {
 	},
     timeout: 2500,
 	});	
-	$body.removeClass("working");
-	progress_reset();
 }
 
 //Add an individual abstract to #show
