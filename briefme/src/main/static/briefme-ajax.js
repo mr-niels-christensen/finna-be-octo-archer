@@ -15,6 +15,7 @@ function show(id, is_recursive_call){
     dataType: 'json',
 	success: function( response ) {
 				if (response.ready) {
+					progress_set(id, 1.0);
 					var _url = '/get-item/dbpedia-resource/' + encodeURIComponent(response.id);
 	      			appstate_update({show:'item',url:_url});
 				} else {
