@@ -10,14 +10,14 @@ function _feed_show(show) {
     dataType: 'json',
 	success: function( response ) {
     	$( '#canvas' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
-		$.each( response.future, _show_item );		
+		$.each( response.future, _show_item );//TODO: Display in order, independent of response time
 	},
     timeout: 2500,
 	});	
 }
 
 function _show_item(index, id) {
-	var _url = '/get-item/dbpedia-resource/' + encodeURIComponent(id);
+	var _url = '/get-meta-item/dbpedia-resource/' + encodeURIComponent(id);
 	//TODO: Handle failures
 	$.ajax({
     url: _url,
