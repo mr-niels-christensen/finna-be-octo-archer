@@ -2,7 +2,12 @@
 
 //Append HTML representing a progress bar with the given id
 function progress_append(id, dest_selector) {
-	dest_selector.append('<td id="' + id + '"><div class="progressbar"><div class="gradient"></div><div class="mask"></div><div class="progressIndicator">0%</div></div></td>');
+	dest_selector.append('<td id="' + id + '"></td>');
+	var parent = $("#" + id);
+	parent.append('<div class="progressbar"></div>');
+	parent.find( '.progressbar' ).append('<div class="gradient"></div>');
+	parent.find( '.progressbar' ).append('<div class="mask"></div>');
+	parent.find( '.progressbar' ).append('<div class="progressIndicator">0%</div>');
 }
 
 //Put the progress bar back to 0%
