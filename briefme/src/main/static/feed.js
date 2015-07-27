@@ -1,6 +1,6 @@
 
 function _feed_show(show) {
-	if (show != 'feed') {
+	if (show && (show != 'feed')) {
 		return;
 	};
 	$( "#canvas" ).empty();
@@ -10,10 +10,20 @@ function _feed_show(show) {
     dataType: 'json',
 	success: function( response ) {//TODO: Feed response ought to contain all metadata
     	$( '#canvas' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
+    	if (response.future.length == 0) {
+    		_report_no_feed_items();
+    		return;
+    	}
 		$.each( response.future, _show_item );//TODO: Display in order, independent of response time
 	},
     timeout: 2500,
 	});	
+}
+
+function _report_no_feed_items() {
+	$( '#feeditems' ).append('<tr></tr>');
+	$( '#feeditems tr:last' ).append('<td></td>');
+	$( '#feeditems tr:last' ).append('You have no items in your feed. Search to add items.');
 }
 
 function _show_item(index, id) {
