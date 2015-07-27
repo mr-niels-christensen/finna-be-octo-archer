@@ -1,8 +1,8 @@
 //TODO: Give the progress bar variable size, it's fixed to 200px right now
 
-//Return HTML representing a progress bar with the given id
-function progress_html(id) {
-	return '<td id="' + id + '"><div class="progressbar"><div class="gradient"></div><div class="mask"></div><div class="progressIndicator">0%</div></div></td>';
+//Append HTML representing a progress bar with the given id
+function progress_append(id, dest_selector) {
+	dest_selector.append('<td id="' + id + '"><div class="progressbar"><div class="gradient"></div><div class="mask"></div><div class="progressIndicator">0%</div></div></td>');
 }
 
 //Put the progress bar back to 0%

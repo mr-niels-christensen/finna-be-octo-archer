@@ -33,7 +33,7 @@ function _add_result( index, result ) {
       $(this).prop('disabled', true);
       show(id, false);
   });
-  $( "#options tr:last" ).append(progress_html(id));
+  progress_append(id, $( "#options tr:last" ));
 }
 
 //Return the first sentence of the textual descrition,
