@@ -1,5 +1,5 @@
 import rdflib
-from rdflib.namespace import DCTERMS, RDF
+from rdflib.namespace import DCTERMS, RDF, RDFS
 from collections import Counter
 from langdetect import detect
 import logging
@@ -29,6 +29,7 @@ def brief(dbpedia_item):
     dbpedia_item.set_progress(0.1)
     thumbnail = g.value(subject = dbpedia_item.uriref(), predicate = _THUMBNAIL_PREDICATE)
     dbpedia_item.set_thumbnail(thumbnail)
+    dbpedia_item.set_title(g.value(subject = dbpedia_item.uriref(), predicate = RDFS.label))
     total = Counter()
     _add_immediate_connections(dbpedia_item.uriref(), g, total)
     dbpedia_item.set_progress(0.2)

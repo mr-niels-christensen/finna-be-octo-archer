@@ -1,5 +1,5 @@
 
-function _show_feed(show) {
+function _feed_show(show) {
 	if (show != 'feed') {
 		return;
 	};
@@ -30,16 +30,14 @@ function _show_item(index, id) {
 		$ ( '#feeditems tr:last' ).append('<td></td>')
 		$ ( '#feeditems tr:last td:last' ).append('<img class="feeditem" src="' + response.thumbnail + '"></img>')
 		$ ( '#feeditems tr:last' ).append('<td></td>')
-		$ ( '#feeditems tr:last td:last' ).append('<div class="feeditem"></div>')
-		$.each( response.data, _show_abstract );
+		$ ( '#feeditems tr:last td:last' ).append('<div class="feeditem"></div>');
+		if (!response.title) {
+			response.title = id;
+		}
+		$ ( "#feeditems tr:last td:last div" ).append( response.title );
 	},
     timeout: 2500,
 	});	
 }
 
-//Add an individual abstract
-function _show_abstract( index, abstract ) {
-	$( "#feeditems tr:last td:last div" ).append( abstract )
-}
-
-appstate_on_update(_show_feed, ['show']);
+appstate_on_update(_feed_show, ['show']);

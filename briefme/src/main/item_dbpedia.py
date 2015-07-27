@@ -40,6 +40,11 @@ class ItemDbpediaResource(object):
         result = json.dumps(result)
         writer.write(result)
 
+    def set_title(self, title) :
+        state = memcache.get(self._id)
+        state['title'] = title
+        memcache.set(self._id, state, 6000)
+
     def set_progress(self, progress):
         state = memcache.get(self._id)
         state['progress'] = progress
