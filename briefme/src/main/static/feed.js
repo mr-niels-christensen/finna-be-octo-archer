@@ -8,7 +8,7 @@ function _feed_show(show) {
 	$.ajax({
     url: '/get-feed',
     dataType: 'json',
-	success: function( response ) {
+	success: function( response ) {//TODO: Feed response ought to contain all metadata
     	$( '#canvas' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
 		$.each( response.future, _show_item );//TODO: Display in order, independent of response time
 	},

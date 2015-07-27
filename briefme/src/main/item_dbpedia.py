@@ -5,7 +5,8 @@ import logging
 import rdflib
 
 _INITIAL_STATE = {'ready' : False,
-                  'progress' : 0.01, }
+                  'progress' : 0.01,
+                 }
 
 class ItemDbpediaResource(object):
     def __init__(self, id, user_id):

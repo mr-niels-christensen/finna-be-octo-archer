@@ -35,21 +35,25 @@ def brief(dbpedia_item):
     dbpedia_item.set_progress(0.2)
     _add_friends(list(g.objects(dbpedia_item.uriref(), DCTERMS.subject)), total, dbpedia_item)
     dbpedia_item.set_progress(0.6)
-    result = [_en_abstract_of(friend, index, dbpedia_item) for (index, (friend, _score)) in enumerate(total.most_common(10))]
+    result = list()
+    for (index, (friend, _score)) in enumerate(total.most_common(10)):
+        _add_en_abstract_of(friend, index, dbpedia_item, result)
     dbpedia_item.set_progress(0.9)
     dbpedia_item.set_data(result)
 
-def _en_abstract_of(uri, index, dbpedia_item):
+def _add_en_abstract_of(uri, index, dbpedia_item, result):
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(uri))
+    label = g.value(subject = uri, predicate = RDFS.label)
     dbpedia_item.set_progress(0.6 + 0.03*index)
     for abstract in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
         try:
             if detect(abstract) == 'en':
-                return abstract
+                result.append([label, abstract])
+                return
         except LangDetectException:
             pass
-    return "Sorry, no description of {}".format(uri)
+    return
 
 def _add_immediate_connections(subject, g, total):
     for pred in _PEOPLE_NW_PREDICATES:
