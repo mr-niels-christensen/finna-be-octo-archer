@@ -1,3 +1,8 @@
+.feeditem {
+	max-height: 80px;
+	width: auto;
+}
+
 .progressbar {
 	visibility: hidden;
 	position:relative;
