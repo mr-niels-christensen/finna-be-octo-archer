@@ -22,6 +22,12 @@ _META_PREDICATES = [RDF.type, #problematic
 
 _THUMBNAIL_PREDICATE = rdflib.URIRef('http://dbpedia.org/ontology/thumbnail')
 
+def _safe_detect(text):
+    try:
+        return detect(text)
+    except LangDetectException:
+        return None
+
 #TODO: Add more documentation, and get rid of briefme.py
 def brief(dbpedia_item):
     g = rdflib.Graph()
@@ -44,17 +50,16 @@ def brief(dbpedia_item):
 def _add_en_abstract_of(uri, index, dbpedia_item, result):
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(uri))
-    #TODO label may appear in several languages
-    label = g.value(subject = uri, predicate = RDFS.label)
+    labels = g.objects(subject = uri, predicate = RDFS.label)
+    en_labels = [l for l in labels if l.language == 'en']
     dbpedia_item.set_progress(0.6 + 0.03*index)
-    for abstract in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):
-        try:
-            if detect(abstract) == 'en':
-                result.append([label, abstract])
-                return
-        except LangDetectException:
-            pass
-    return
+    abstracts = g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract"))
+    en_abstracts = [a for a in abstracts if _safe_detect(a) == 'en']
+    if len(en_abstracts) == 0:
+        return
+    if len(en_labels) == 0:
+        en_labels = labels + [""]
+    result.append([en_labels[0], sorted(en_abstracts, key=lambda a : a.language=='en')[-1]])
 
 def _add_immediate_connections(subject, g, total):
     for pred in _PEOPLE_NW_PREDICATES:
