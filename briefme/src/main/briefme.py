@@ -44,6 +44,7 @@ def brief(dbpedia_item):
 def _add_en_abstract_of(uri, index, dbpedia_item, result):
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(uri))
+    #TODO label may appear in several languages
     label = g.value(subject = uri, predicate = RDFS.label)
     dbpedia_item.set_progress(0.6 + 0.03*index)
     for abstract in g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")):

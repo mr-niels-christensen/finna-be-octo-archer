@@ -54,7 +54,7 @@ function _sentence(text) {
   }
   //Join up the strings and replace any dangling commas that used to have () in front of them
   var result = elems.join('').replace(/ ,/g, ', ');
-  //Limimt to max 150 chars
+  //Limit to max 150 chars
   if (result.length <= 150) {
     return result;
   } else {
