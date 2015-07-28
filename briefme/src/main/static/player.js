@@ -1,3 +1,9 @@
+/**
+ * Clear #canvas and narrates the named item.
+ * @param show {string} If not == 'player', this function
+ * returns without any effect.
+ * @param item {string} The item to play, e.g. 'Mozart'.
+ */
 function _play_item(show, item) {
   //Check show, return if not == 'player'
   if (show != 'player') {
@@ -7,21 +13,24 @@ function _play_item(show, item) {
   $( "#canvas" ).empty();
   //TODO: List contents
 	$.ajax({//TODO: Handle failures
-    url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
-    dataType: 'json',
+	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
+	dataType: 'json',
 	success: function (response) {
 		$.each(response.data, function (index, label_abstract){
 			//TODO: Allow pause/stop
-			narrate_text(label_abstract[0]);
-			narrate_text(label_abstract[1]);
+			_narrate_text(label_abstract[0]);
+			_narrate_text(label_abstract[1]);
 		})
 	},
-    timeout: 2500,
-	});	
-  
+	timeout: 2500,
+	});
 }
 
-function narrate_text(txt) {
+/**
+ * Narrates the given text.
+ * @param txt {string} A string of sentences, delimited by '.'s
+ */
+function _narrate_text(txt) {
   //See http://updates.html5rocks.com/2014/01/Web-apps-that-talk---Introduction-to-the-Speech-Synthesis-API
   //Dodge https://code.google.com/p/chromium/issues/detail?id=369472
   var txts = txt.split('.');
