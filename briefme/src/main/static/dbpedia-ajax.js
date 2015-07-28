@@ -21,7 +21,8 @@ function lookup(show, search_for) {
     dataType: 'json',
     success: function( response ) {
       //Add table #options to contain hits from DBpedia
-      $( '#canvas' ).append('<table id="options" class="table table-striped table-hover"></table>');
+      $( '#canvas' ).append('<div class="table-responsive"></div>');
+      $( '#canvas .table-responsive' ).append('<table id="options" class="table table-striped table-hover"></table>');
       //Add each hit as a row in table #options
       $.each( response.results, _add_result );
     },

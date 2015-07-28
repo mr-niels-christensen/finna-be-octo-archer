@@ -16,7 +16,8 @@ function _feed_show(show) {
     dataType: 'json',
 	success: function( response ) {//TODO: Feed response ought to contain all metadata
 		//Success: Create a table to display feed items in
-    	$( '#canvas' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
+    	$( '#canvas' ).append('<div class="table-responsive"></div>');
+    	$( '#canvas .table-responsive' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
     	//Provide instructions if the user's feed is empty
     	if (response.future.length == 0) {
     		_report_no_feed_items();
