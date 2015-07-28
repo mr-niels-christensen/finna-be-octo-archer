@@ -69,6 +69,16 @@ function _load(id, success_cb) {
 function _show_item( response ) {
 	//Append the row
 	$( '#feeditems' ).append('<tr></tr>');
+	//Add Play column
+	$ ( '#feeditems tr:last' ).append('<td></td>')
+	$ ( '#feeditems tr:last td:last' ).append('<button type="button" class="btn btn-success">Play</button>');
+	if (response.ready) {
+		$ ( '#feeditems tr:last td:last button' ).on( "click", function() {
+	      appstate_update({show: 'player', item:response.id});
+    	});
+	} else {
+		$ ( '#feeditems tr:last td:last button' ).prop('disabled', true);
+	}
 	//Add thumbnail column
 	if (!response.thumbnail) {
 		response.thumbnail = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
