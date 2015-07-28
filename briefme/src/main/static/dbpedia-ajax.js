@@ -1,11 +1,18 @@
-//List found resources in the table in #options
+/**
+ * If show=='hits', search DBpedia for search_for and
+ * display the results on #canvas
+ * @param show {string} If show!='hits', return without action
+ * @param search_for {string} The search query to send to DBpedia
+ */
 function lookup(show, search_for) {
+  //Check show, return if not == 'hits'
   if (show != 'hits') {
     return;
   }
+  //Clear #canvas
 	$( "#canvas" ).empty();
-	//TODO: Handle failures
-	$.ajax({
+	//AJAX search DBpedia
+	$.ajax({//TODO: Handle failures
     url: "http://lookup.dbpedia.org/api/search/KeywordSearch",
     data: {
       "QueryString" : search_for,
@@ -13,16 +20,24 @@ function lookup(show, search_for) {
     },
     dataType: 'json',
     success: function( response ) {
+      //Add table #options to contain hits from DBpedia
       $( '#canvas' ).append('<table id="options" class="table table-striped table-hover"></table>');
+      //Add each hit as a row in table #options
       $.each( response.results, _add_result );
     },
     timeout: 4000,
   });
 }
 
-//Add an individual DBpedia resource to the table in #options
+/*
+ * Add an individual DBpedia hit as a row in table #options
+ * @param index {number} The index of this hit, e.g. 5
+ * @param result {object} Parsed JSON object from DBpedia
+ */
 function _add_result( index, result ) {
+  //Extract id without namespace, e.g. 'Mozart'
   var id = result.uri.split("/").pop();
+  //Append a row displaying this DBpedia hit
 	$( "#options" ).append( "<tr></tr>" );
 	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
 	$( "#options tr:last b" ).append( result.label );
@@ -31,15 +46,19 @@ function _add_result( index, result ) {
   $( "#options tr:last" ).append( '<td><button type="button" class="btn btn-success">Add</button></td>' );
   $( "#options tr:last button" ).on( "click", function() {
       $(this).prop('disabled', true);
-      show(id, false);
+      _add_to_feed(id);
   });
-  $( "#options tr:last" ).append( '<td></td>' );
-  var button = $( "#options tr:last button" );
-  progress_append(id, $( "#options tr:last td:last" ), button.width()* 2, button.height() * 1.5);
 }
 
 //Return the first sentence of the textual descrition,
 //without stuff in parentheses
+/*
+ * Summarizes a DBpedia description to a form that is at most
+ * 150 characters and at most one sentence. Removes anything
+ * in parentheses.
+ * @param text {string} The description to summarize.
+ * @return {string} The summary.
+ */
 function _sentence(text) {
   if (!text) { //Avoid processing a null text
     return "Sorry, no description.";
@@ -62,12 +81,13 @@ function _sentence(text) {
   }
 }
 
-//Hook the lookup form up to the lookup() function
+/** Hook the lookup form up to appstate */
 $( "#lookup" ).submit(function( event ) {
   event.preventDefault();
   appstate_update({show:'hits', query : $( '#query' ).val()});
 });
 
+/** Call the lookup() function on appstate update */
 appstate_on_update(lookup, ['show', 'query']);
 
 

@@ -40,10 +40,15 @@ function _report_no_feed_items() {
 }
 
 /**
- * AJAX loads and displays one feed item as a row in table #feeditems
- * @param index {number} The index of the feed item in the list of
- * of feed items, e.g. 0, 1, or 45.
- * @param id {string} The id of the feed item to show, e.g. 'Mozart'
+ * Define callback type
+ * @callback metaitemCallback
+ * @param {object} response
+ */
+
+/**
+ * AJAX loads one feed item and passes the result to a callback.
+ * @param id {string} The id of the feed item to get, e.g. 'Mozart'
+ * @param success_cb {metaitemCallback}
  */
 function _load(id, success_cb) {
 	//Request metadata from server, then append as a row in table #feeditems
@@ -55,19 +60,28 @@ function _load(id, success_cb) {
 	});	
 }
 
-function _show_item( response ) {//Append row showing item
+/**
+ * Appends one row to table #feeditems, displaying the feed item.
+ * Starts a polling loop (updating progress bar) if the feed item is not ready.
+ * @param response {object} The feed item to display
+ */
+function _show_item( response ) {
+	//Append the row
 	$( '#feeditems' ).append('<tr></tr>');
+	//Add thumbnail column
 	if (!response.thumbnail) {
 		response.thumbnail = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
 	};
 	$ ( '#feeditems tr:last' ).append('<td></td>')
 	$ ( '#feeditems tr:last td:last' ).append('<img class="feeditem" src="' + response.thumbnail + '"></img>')
+	//Add title column
 	$ ( '#feeditems tr:last' ).append('<td></td>')
 	$ ( '#feeditems tr:last td:last' ).append('<div class="feeditem"></div>');
 	if (!response.title) {
 		response.title = response.id;
 	}
 	$ ( "#feeditems tr:last td:last div" ).append( response.title );
+	//Add status/progress bar column
 	$ ( '#feeditems tr:last' ).append('<td></td>')
 	progress_append(
 		response.id, 
@@ -75,16 +89,20 @@ function _show_item( response ) {//Append row showing item
 		100,//TODO responsive design, please 
 		40);
 	//Update progress bar and poll if necessary
-	_poll(response);
+	_update_status(response);
 }
 
-function _poll(response) {
+/**
+ * Updates progress bar, starting a poll loop if necessary.
+ * @param response {object} The feed item to update for.
+ */
+function _update_status(response) {
 	if (response.ready) {
 		progress_set(response.id, 1.0);
 	} else {
 		progress_set(response.id, response.progress);
 		//TODO: Use comet long polling
-		setTimeout(function(){_load(response.id, _poll);} , 1000 );
+		setTimeout(function(){_load(response.id, _update_status);} , 1000 );
 	};
 }
 
