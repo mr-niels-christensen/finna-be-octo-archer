@@ -50,7 +50,7 @@ def brief(dbpedia_item):
 def _add_en_abstract_of(uri, index, dbpedia_item, result):
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(uri))
-    labels = g.objects(subject = uri, predicate = RDFS.label)
+    labels = list(g.objects(subject = uri, predicate = RDFS.label))
     en_labels = [l for l in labels if l.language == 'en']
     dbpedia_item.set_progress(0.6 + 0.03*index)
     abstracts = g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract"))
@@ -58,8 +58,9 @@ def _add_en_abstract_of(uri, index, dbpedia_item, result):
     if len(en_abstracts) == 0:
         return
     if len(en_labels) == 0:
-        en_labels = labels + [""]
-    result.append([en_labels[0], sorted(en_abstracts, key=lambda a : a.language=='en')[-1]])
+        en_labels = list(labels) + [""]
+    result.append(en_labels[0])
+    result.append(sorted(en_abstracts, key=lambda a : a.language=='en')[-1])
 
 def _add_immediate_connections(subject, g, total):
     for pred in _PEOPLE_NW_PREDICATES:

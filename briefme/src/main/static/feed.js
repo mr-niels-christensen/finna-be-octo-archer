@@ -19,12 +19,12 @@ function _feed_show(show) {
     	$( '#canvas' ).append('<div class="table-responsive"></div>');
     	$( '#canvas .table-responsive' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
     	//Provide instructions if the user's feed is empty
-    	if (response.future.length == 0) {
+    	if (response.item_keys.length == 0) {
     		_report_no_feed_items();
     		return;
     	}
     	//Call _show_item() on each feed item
-		$.each( response.future, 
+		$.each( response.item_keys, 
 		        function (index, id) {_load(id, _show_item)});//TODO: Display in order, independent of response time
 	},
     timeout: 2500,
@@ -74,28 +74,28 @@ function _show_item( response ) {
 	$ ( '#feeditems tr:last td:last' ).append('<button type="button" class="btn btn-success">Play</button>');
 	if (response.ready) {
 		$ ( '#feeditems tr:last td:last button' ).on( "click", function() {
-	      appstate_update({show: 'player', item:response.id});
+	      appstate_update({show: 'player', item:response.name});
     	});
 	} else {
 		$ ( '#feeditems tr:last td:last button' ).prop('disabled', true);
 	}
 	//Add thumbnail column
-	if (!response.thumbnail) {
-		response.thumbnail = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
+	if (!response.thumbnail_url) {
+		response.thumbnail_url = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
 	};
 	$ ( '#feeditems tr:last' ).append('<td></td>')
-	$ ( '#feeditems tr:last td:last' ).append('<img class="feeditem" src="' + response.thumbnail + '"></img>')
+	$ ( '#feeditems tr:last td:last' ).append('<img class="feeditem" src="' + response.thumbnail_url + '"></img>')
 	//Add title column
 	$ ( '#feeditems tr:last' ).append('<td></td>')
 	$ ( '#feeditems tr:last td:last' ).append('<div class="feeditem"></div>');
 	if (!response.title) {
-		response.title = response.id;
+		response.title = response.name;
 	}
 	$ ( "#feeditems tr:last td:last div" ).append( response.title );
 	//Add status/progress bar column
 	$ ( '#feeditems tr:last' ).append('<td></td>')
 	progress_append(
-		response.id, 
+		response.name, 
 		$ ( '#feeditems tr:last td:last' ), 
 		100,//TODO responsive design, please 
 		40);
@@ -109,11 +109,11 @@ function _show_item( response ) {
  */
 function _update_status(response) {
 	if (response.ready) {
-		progress_set(response.id, 1.0);
+		progress_set(response.name, 1.0);
 	} else {
-		progress_set(response.id, response.progress);
+		progress_set(response.name, response.progress);
 		//TODO: Use comet long polling
-		setTimeout(function(){_load(response.id, _update_status);} , 1000 );
+		setTimeout(function(){_load(response.name, _update_status);} , 1000 );
 	};
 }
 

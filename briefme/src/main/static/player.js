@@ -15,12 +15,13 @@ function _play_item(show, item) {
 	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
 	dataType: 'json',
 	success: function (response) {
-		$.each(response.data, function (index, label_abstract){
+		$.each(response.data, function (index, label_or_abstract){
 			//TODO: Allow pause/stop
-			$( '#canvas' ).append( '<p></p>' );
-			$( '#canvas p:last' ).html( label_abstract[0] );
-			_narrate_text(label_abstract[0]);
-			_narrate_text(label_abstract[1]);
+      if (index % 2 == 0) {
+        $( '#canvas' ).append( '<p></p>' );
+        $( '#canvas p:last' ).html( label_or_abstract );        
+      }
+			_narrate_text(label_or_abstract);
 		})
 	},
 	timeout: 2500,
