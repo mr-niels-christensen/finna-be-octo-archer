@@ -5,9 +5,9 @@ from langdetect import detect
 import logging
 import urllib2
 import json
-import cache
 from langdetect.lang_detect_exception import LangDetectException
-from uuid import uuid4
+
+from briefme import cache
 
 _PEOPLE_NW_PREDICATES = [rdflib.URIRef('http://dbpedia.org/property/children'),
                          rdflib.URIRef('http://dbpedia.org/property/predecessor'),

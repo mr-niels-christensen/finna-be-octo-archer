@@ -1,5 +1,5 @@
 application: mayacs-test
-version: briefme
+version: briefme-p-1
 runtime: python27
 api_version: 1
 threadsafe: true
@@ -14,10 +14,10 @@ handlers:
   upload: static/.*\.(html|js|css|gif)$
   login: required
 - url: /create-item
-  script: httpserver.application
+  script: briefme.httpserver.application
   login: admin
 - url: /.*
-  script: httpserver.application
+  script: briefme.httpserver.application
   login: required
 
 libraries:

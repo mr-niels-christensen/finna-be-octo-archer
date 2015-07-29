@@ -1,14 +1,12 @@
 from google.appengine.api import users
 import logging
-
-import briefme
-
 import webapp2
 import json
 
-import cache
-from item_dbpedia import ItemDbpediaResource
-from feed import Feed
+from briefme import analyse
+from briefme import cache
+from briefme.feed import Feed
+from briefme.item_dbpedia import ItemDbpediaResource
 
 class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
     def get(self, id):
@@ -33,7 +31,7 @@ class _CreateHandler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
         item = ItemDbpediaResource.from_request(self.request)
         try:
-            briefme.brief(item)
+            analyse.brief(item)
         except Exception as e:
             logging.warn('Failed to process {}'.format(item), exc_info = True);
             item.set_failed(e)
