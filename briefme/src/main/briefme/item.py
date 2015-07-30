@@ -31,8 +31,8 @@ class Item(ndb.Model):
 
     @staticmethod
     def for_name(name, 
-             namespace = 'http://dbpedia.org/resource/',
-             create_cb = lambda key : None):
+                 namespace = 'http://dbpedia.org/resource/',
+                 create_cb = lambda key : None):
         '''Looks up named Item.
            If there is no suchItem, a new (shallow) one is created
            and stored, and then the create_cb is called
@@ -74,17 +74,21 @@ class Item(ndb.Model):
         self.data = data
         self.put()
 
-    #TODO Get rid of most below setters
-
     def set_progress(self, progress):
+        '''Utility: Updates and stores self in one operation
+        '''
         self.progress = progress
         self.put()
         
     def set_title(self, title):
+        '''Utility: Updates and stores self in one operation
+        '''
         self.title = title
         self.put()
 
-    def set_thumbnail(self, thumbnail_url):
+    def set_thumbnail_url(self, thumbnail_url):
+        '''Utility: Updates and stores self in one operation
+        '''
         self.thumbnail_url = thumbnail_url
         self.put()
         
