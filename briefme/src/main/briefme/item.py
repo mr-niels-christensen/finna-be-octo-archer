@@ -19,7 +19,7 @@ class Item(ndb.Model):
     namespace     = ndb.StringProperty(required = True)
     ready         = ndb.BooleanProperty(required = True,
                                         default = False)
-    '''Value between 0.0 and 1.0.
+    '''Value between 0.0 and 1.0. TODO: Verify or remodel
     '''
     progress      = ndb.FloatProperty(default = 0.01)
     title         = ndb.StringProperty()
