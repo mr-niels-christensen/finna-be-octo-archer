@@ -23,11 +23,25 @@ function lookup(show, search_for) {
       //Add table #options to contain hits from DBpedia
       $( '#canvas' ).append('<div class="table-responsive"></div>');
       $( '#canvas .table-responsive' ).append('<table id="options" class="table table-striped table-hover"></table>');
+      if (response.results.length == 0) {
+        _report_no_hits(search_for);
+        return;
+      }
       //Add each hit as a row in table #options
       $.each( response.results, _add_result );
     },
     timeout: 4000,
   });
+}
+
+/**
+ * Creates one row in table #options, providing a bit of information
+ * @param search_for {string} The string the DBpedia was searched for
+ */
+function _report_no_hits(search_for) {
+  $( "#options" ).append( "<tr></tr>" );
+  $( "#options tr:last" ).append( "<td></td>" ); 
+  $( "#options tr:last td" ).html('Sorry, 0 hits for "' + search_for + '"');
 }
 
 /*
