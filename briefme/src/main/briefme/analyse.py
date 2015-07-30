@@ -45,7 +45,7 @@ def brief(dbpedia_item):
     for (index, (friend, _score)) in enumerate(total.most_common(10)):
         _add_en_abstract_of(friend, index, dbpedia_item, result)
     dbpedia_item.set_progress(0.9)
-    dbpedia_item.set_data(result)
+    dbpedia_item.set_finished_with_data(result)
 
 def _add_en_abstract_of(uri, index, dbpedia_item, result):
     g = rdflib.Graph()

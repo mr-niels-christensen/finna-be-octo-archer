@@ -4,20 +4,46 @@ import rdflib
 import json
 
 class Item(ndb.Model):
+    '''This represents a single RSS-like item, as in a single podcast episode.
+       An Item is currently identified by a name with namespace,
+       e.g. a DBpedia resource like 'http://dbpedia.org/resource/Mozart'
+
+       An Item takes a long time (say, 10-60 seconds) to create in all details,
+       so this is done asynchronously. For this reason, Item has 'progress'
+       and 'ready' attributes. This is somewhat redundant, as progress should be 1.0
+       whenever ready is True.
+    '''
+
     created       = ndb.DateTimeProperty(auto_now_add = True)
     name          = ndb.StringProperty(required = True)
     namespace     = ndb.StringProperty(required = True)
     ready         = ndb.BooleanProperty(required = True,
                                         default = False)
+    '''Value between 0.0 and 1.0.
+    '''
     progress      = ndb.FloatProperty(default = 0.01)
     title         = ndb.StringProperty()
     thumbnail_url = ndb.StringProperty()
+    '''Currently always a list of even length on the form
+       [section_0_title,section_0_text,section_1_title,section_1_text,...]
+    '''
     data          = ndb.TextProperty(repeated = True)
 
     @staticmethod
     def for_name(name, 
-                 namespace = 'http://dbpedia.org/resource/',
-                 create_cb = lambda key : None):
+             namespace = 'http://dbpedia.org/resource/',
+             create_cb = lambda key : None):
+        '''Looks up named Item.
+           If there is no suchItem, a new (shallow) one is created
+           and stored, and then the create_cb is called
+           with its ndb.Key.
+           @param name: e.g. 'Mozart'
+           @param namespace: An RDF namespace, e.g. 'http://dbpedia.org/resource/'
+           @param create_cb: A single-parameter callback to start
+           asynchronous creation of the Item. The default is
+           to do nothing.
+           @return An Item instance. Never returns None.
+        '''
         key = ndb.Key(Item, namespace + name)
         entity = key.get()
         if entity is None:
@@ -28,24 +54,28 @@ class Item(ndb.Model):
             create_cb(key)
         return entity
 
-    @staticmethod
-    def for_key_urlsafe(key_urlsafe):
-        key = ndb.Key(urlsafe = key_urlsafe)
-        return key.get()
-
     def external_url(self):
+        '''@return e.g. 'http://dbpedia.org/resource/Mozart'
+        '''
         return self.namespace + self.name
 
     def uriref(self):
+        '''@return e.g. rdflib.URIRef('http://dbpedia.org/resource/Mozart')
+        '''
         return rdflib.URIRef(self.external_url())
 
-    def set_data(self, data):
+    def set_finished_with_data(self, data):
+        '''Finalizes this Item.
+           Sets progress to 1.0, ready to True and
+           data to the given value, then stores this Item.
+        '''
         self.ready = True
         self.progress = 1.0
         self.data = data
         self.put()
 
-    #TODO Get rid of most setters
+    #TODO Get rid of most below setters
+
     def set_progress(self, progress):
         self.progress = progress
         self.put()
@@ -59,9 +89,16 @@ class Item(ndb.Model):
         self.put()
         
     def set_failed(self, exception):
-        self.set_data(['Sorry, {}'.format(exception)])
+        '''TODO: This is currently just calling set_finished_with_data,
+           but should go to a separate failed state
+        '''
+        self.set_finished_with_data(['Error','Sorry, {}'.format(exception)])
 
     def write_as_json(self, writer):
+        '''Dumps this Item as JSON to the writer.
+           Currently excludes the 'created' field (which would require 
+            separate formatting).
+        '''
         d = self.to_dict()
         del d['created']
         json.dump(d, writer)
