@@ -55,7 +55,7 @@ function _narrate_text(txt, high_pitch) {
     }
     var msg = new SpeechSynthesisUtterance(value);
     if (high_pitch) {
-      msg.pitch = 1.5;
+      msg.pitch = 1.15;
     }
     msg.onend = function(event) {
       console.log(index + ': Finished');
