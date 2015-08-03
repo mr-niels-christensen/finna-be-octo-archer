@@ -81,7 +81,6 @@ class _AddToChannelHandler(webapp2.RequestHandler):
 #TODO better naming of URLs
 application = webapp2.WSGIApplication([
     webapp2.Route(r'/get-item/dbpedia-resource/<name>', handler=_GetItemDbpediaResourceHandler, name='get-item'),
-    #TODO: Implement the below properly or remove it
     webapp2.Route(r'/create-item', handler=_CreateItemHandler, name='create-item'),
     webapp2.Route(r'/get-channel', handler=_GetChannelHandler, name='get-channel'),
     webapp2.Route(r'/add-to-feed/<name>', handler=_AddToChannelHandler, name='add-to-channel'),
