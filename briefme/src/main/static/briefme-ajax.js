@@ -12,7 +12,7 @@ function _add_to_feed(id){
     method: 'POST',
     dataType: 'json',
 	success: function( response ) {
-				appstate_update({show: 'feed'});
+				appstate_update({show: 'channel'});
 			},
     timeout: 2500,
   });

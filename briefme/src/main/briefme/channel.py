@@ -42,10 +42,7 @@ class Channel(ndb.Model):
 
     def write_as_json(self, writer):
         '''Writes this Channel to the given writer as JSON.
-           Right now, this writes a JSON object with one key 'item_keys',
-           mapping to a list of strings, each one the name of an Item.
+           Right now, this writes a JSON list with one element per item.
         '''
-        d = dict()
-        #TODO Get rid of below hack
-        d['item_keys'] = [k.id().split('/')[-1] for k in self.item_keys]
-        json.dump(d, writer)
+        l = [i.as_jsonifiable() for i in ndb.get_multi(self.item_keys)]
+        json.dump(l, writer)

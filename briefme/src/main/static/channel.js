@@ -1,121 +1,113 @@
 /**
- * Clears the #canvas and displays the current user's feed
+ * Clears the #canvas and displays the current user's channel
  * @param show {string} This function returns without effect,
  * if show is a string != 'feed'.
  */
-function _feed_show(show) {
-	//Check whether to show feed (this is default, so ok if show is undefined)
-	if (show && (show != 'feed')) {
+function _channel_show(show) {
+	//Check whether to show channel (this is default, so ok if show is undefined)
+	if (show && (show != 'channel')) {
 		return;
 	};
 	//Clear #canvas
 	$( "#canvas" ).empty();
+	//Create a table to display channel items in
+	$( '#canvas' ).append('<div class="table-responsive"></div>');
+	$( '#canvas .table-responsive' ).append('<table id="channelitems" class="table table-striped table-hover"></table>');
+	_channel_update();
+}
+
+function _channel_update() {
 	//AJAX  request feed, then display using _show_item()
 	$.ajax({//TODO: Handle failures
-    url: '/get-feed',
+    url: '/get-channel',
     dataType: 'json',
-	success: function( response ) {//TODO: Feed response ought to contain all metadata
-		//Success: Create a table to display feed items in
-    	$( '#canvas' ).append('<div class="table-responsive"></div>');
-    	$( '#canvas .table-responsive' ).append('<table id="feeditems" class="table table-striped table-hover"></table>');
-    	//Provide instructions if the user's feed is empty
-    	if (response.item_keys.length == 0) {
-    		_report_no_feed_items();
+	success: function( response ) {
+    	//Provide instructions if the user's channel is empty
+    	if (response.length == 0) {
+    		_report_no_channel_items();
     		return;
     	}
-    	//Call _show_item() on each feed item
-		$.each( response.item_keys, 
-		        function (index, id) {_load(id, _show_item)});//TODO: Display in order, independent of response time
+    	//Append the row for each channel item
+    	var missing = response.length - ($( '#channelitems tr' ).length);
+    	for (i = 0; i < missing; i++) {
+    		_append_item_row( $('#channelitems'), response[i].name );
+    	};
+    	//Call _show_item() on each channel item
+		var poll = $.map( response, function (item, index) {
+					var row_selector = $('#channelitems tr:nth-child(' + (index+1) + ')');
+					return _show_item( row_selector, item );
+		        });
+		if (poll.some(function (x) {return x;})) {
+			//TODO: Use comet long polling
+			setTimeout(_channel_update , 1000 );
+		}
 	},
     timeout: 2500,
 	});	
 }
 
 /**
- * Creates one row in table #feeditems, providing a bit of instruction
+ * Creates one row in table #channelitems, providing a bit of instruction
  */
-function _report_no_feed_items() {
-	$( '#feeditems' ).append('<tr></tr>');
-	$( '#feeditems tr:last' ).append('<td></td>');
-	$( '#feeditems tr:last' ).append('You have no items in your feed. Search to add items.');
+function _report_no_channel_items() {
+	$( '#channelitems' ).append('<tr></tr>');
+	$( '#channelitems tr:last' ).append('<td></td>');
+	$( '#channelitems tr:last' ).append('You have no items in your channel. Search to add items.');
 }
 
-/**
- * Define callback type
- * @callback metaitemCallback
- * @param {object} response
- */
-
-/**
- * AJAX loads one feed item and passes the result to a callback.
- * @param id {string} The id of the feed item to get, e.g. 'Mozart'
- * @param success_cb {metaitemCallback}
- */
-function _load(id, success_cb) {
-	//Request metadata from server, then append as a row in table #feeditems
-	$.ajax({//TODO: Handle failures
-    url: '/get-meta-item/dbpedia-resource/' + encodeURIComponent(id),//TODO provide url from server
-    dataType: 'json',
-	success: success_cb,
-    timeout: 2500,
-	});	
-}
-
-/**
- * Appends one row to table #feeditems, displaying the feed item.
- * Starts a polling loop (updating progress bar) if the feed item is not ready.
- * @param response {object} The feed item to display
- */
-function _show_item( response ) {
-	//Append the row
-	$( '#feeditems' ).append('<tr></tr>');
+function _append_item_row(table_selector, name) {
+	table_selector.append('<tr></tr>');
+	var row_selector = table_selector.find( 'tr:last' );	
 	//Add Play column
-	$ ( '#feeditems tr:last' ).append('<td></td>')
-	$ ( '#feeditems tr:last td:last' ).append('<button type="button" class="btn btn-success">Play</button>');
-	if (response.ready) {
-		$ ( '#feeditems tr:last td:last button' ).on( "click", function() {
-	      appstate_update({show: 'player', item:response.name});
-    	});
-	} else {
-		$ ( '#feeditems tr:last td:last button' ).prop('disabled', true);
-	}
-	//Add thumbnail column
-	if (!response.thumbnail_url) {
-		response.thumbnail_url = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
-	};
-	$ ( '#feeditems tr:last' ).append('<td></td>')
-	$ ( '#feeditems tr:last td:last' ).append('<img class="feeditem" src="' + response.thumbnail_url + '"></img>')
+	row_selector.append('<td></td>')
+	row_selector.find( 'td:last' ).append('<button type="button" class="btn btn-success">Play</button>');
+	row_selector.append('<td></td>')
+	row_selector.find( 'td:last' ).append('<img class="feeditem"></img>')
 	//Add title column
-	$ ( '#feeditems tr:last' ).append('<td></td>')
-	$ ( '#feeditems tr:last td:last' ).append('<div class="feeditem"></div>');
-	if (!response.title) {
-		response.title = response.name;
-	}
-	$ ( "#feeditems tr:last td:last div" ).append( response.title );
+	row_selector.append('<td></td>')
+	row_selector.find( 'td:last' ).append('<div class="feeditem itemtitle"></div>');
 	//Add status/progress bar column
-	$ ( '#feeditems tr:last' ).append('<td></td>')
+	row_selector.append('<td></td>')
 	progress_append(
-		response.name, 
-		$ ( '#feeditems tr:last td:last' ), 
+		name, 
+		row_selector.find( 'td:last' ), 
 		100,//TODO responsive design, please 
 		40);
-	//Update progress bar and poll if necessary
-	_update_status(response);
 }
 
 /**
- * Updates progress bar, starting a poll loop if necessary.
- * @param response {object} The feed item to update for.
+ * Appends one row to table #channelitems, displaying the feed item.
+ * Starts a polling loop (updating progress bar) if the feed item is not ready.
+ * @param response {object} The channel item to display
  */
-function _update_status(response) {
-	if (response.ready) {
-		progress_set(response.name, 1.0);
+function _show_item( row_selector, item ) {
+	if (item.ready) {
+		row_selector.find( 'button' ).on( "click", function() {
+	      appstate_update({show: 'player', item:item.name});
+    	});
+		row_selector.find( 'button' ).prop('disabled', false);
 	} else {
-		progress_set(response.name, response.progress);
-		//TODO: Use comet long polling
-		setTimeout(function(){_load(response.name, _update_status);} , 1000 );
+		row_selector.find( 'button' ).prop('disabled', true);
+	}
+	//Add thumbnail
+	if (!item.thumbnail_url) {
+		item.thumbnail_url = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
 	};
+	if (item.thumbnail_url != row_selector.find( 'img' ).attr( 'src' )){
+		row_selector.find( 'img' ).attr( 'src', item.thumbnail_url );
+	}
+	if (!item.title) {
+		item.title = item.name;
+	}
+	row_selector.find ( ".itemtitle" ).html( item.title || item.name );
+	//Update progress bar and poll if necessary
+	if (item.ready) {
+		progress_set(item.name, 1.0);
+	} else {
+		progress_set(item.name, item.progress);
+	};
+	return !item.ready;
 }
 
-/** Call _feed_show() when appstate changes */
-appstate_on_update(_feed_show, ['show']);
+/** Call _channel_show() when appstate changes */
+appstate_on_update(_channel_show, ['show']);

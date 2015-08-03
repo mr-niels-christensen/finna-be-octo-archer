@@ -98,13 +98,21 @@ class Item(ndb.Model):
         '''
         self.set_finished_with_data(['Error','Sorry, {}'.format(exception)])
 
+    def as_jsonifiable(self):
+        '''Converts this Item to a structure suitable for JSON output
+           Currently excludes the 'created' field (which would require 
+            separate formatting).
+           @return the created data structure (a dict)
+        '''
+        d = self.to_dict()
+        del d['created']
+        return d
+
     def write_as_json(self, writer):
         '''Dumps this Item as JSON to the writer.
            Currently excludes the 'created' field (which would require 
             separate formatting).
         '''
-        d = self.to_dict()
-        del d['created']
-        json.dump(d, writer)
+        json.dump(self.as_jsonifiable(), writer)
 
 
