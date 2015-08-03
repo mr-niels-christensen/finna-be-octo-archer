@@ -54,15 +54,15 @@ function _add_result( index, result ) {
   var id = result.uri.split("/").pop();
   //Append a row displaying this DBpedia hit
 	$( "#options" ).append( "<tr></tr>" );
-	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
-	$( "#options tr:last b" ).append( result.label );
-	$( "#options tr:last td" ).append( "<p><small></small></p>" );
-	$( "#options tr:last small" ).append( _sentence(result.description) );
   $( "#options tr:last" ).append( '<td><button type="button" class="btn btn-success">Add</button></td>' );
   $( "#options tr:last button" ).on( "click", function() {
       $(this).prop('disabled', true);
       _add_to_feed(id);
   });
+	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
+	$( "#options tr:last b" ).append( result.label );
+	$( "#options tr:last td:last" ).append( "<p><small></small></p>" );
+	$( "#options tr:last small" ).append( _sentence(result.description) );
 }
 
 //Return the first sentence of the textual descrition,
