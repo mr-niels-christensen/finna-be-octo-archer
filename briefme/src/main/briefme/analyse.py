@@ -6,6 +6,7 @@ import logging
 import urllib2
 import json
 from langdetect.lang_detect_exception import LangDetectException
+import unicodedata as ud
 
 from briefme import cache
 
@@ -21,6 +22,19 @@ _META_PREDICATES = [RDF.type, #problematic
         rdflib.URIRef('http://dbpedia.org/property/wordnet_type')]
 
 _THUMBNAIL_PREDICATE = rdflib.URIRef('http://dbpedia.org/ontology/thumbnail')
+
+
+_latin_letters= {}
+
+def _is_latin(uchr):
+    try: return _latin_letters[uchr]
+    except KeyError:
+         return _latin_letters.setdefault(uchr, 'LATIN' in ud.name(uchr))
+
+def _only_roman_chars(unistr):
+    return all(_is_latin(uchr)
+           for uchr in unistr
+           if uchr.isalpha())
 
 def _safe_detect(text):
     '''Determines the language of the text.
@@ -45,7 +59,7 @@ def brief(dbpedia_item):
     #Extract thumbnail and title
     thumbnail_url = g.value(subject = dbpedia_item.uriref(), predicate = _THUMBNAIL_PREDICATE)
     dbpedia_item.set_thumbnail_url(thumbnail_url)
-    dbpedia_item.set_title(g.value(subject = dbpedia_item.uriref(), predicate = RDFS.label))
+    dbpedia_item.set_title(_best_label(g, dbpedia_item.uriref()))
     #Accumulate related resources and count how many relations each has to the main subject
     total = Counter()
     _add_immediate_connections(dbpedia_item.uriref(), g, total)
@@ -62,6 +76,20 @@ def brief(dbpedia_item):
     #Finalize item with the list of abstracts
     dbpedia_item.set_finished_with_data(result)
 
+def _best_label(g, uri):
+    '''Look up all labels for uri in g, return the best choice for English.
+       @param g An rdflib graph
+       @param uri The subject to find a label for
+       @return An English RDFS.label, if possible, else one with Roman letters only,
+       if possible, else "".
+    '''
+    labels = list(g.objects(subject = uri, predicate = RDFS.label))
+    en_labels = [l for l in labels if l.language == 'en']
+    #If there was no English label, pick a Roman-only one at random, or "" if no label at all
+    if len(en_labels) == 0:
+        en_labels = [l for l in labels if _only_roman_chars(l)] + [""]
+    return en_labels[0]
+
 def _add_en_abstract_of(uri, result):
     '''Appends two texts (rdflib.Literals) to result:
        the English label and abstract of the given uri.
@@ -73,19 +101,14 @@ def _add_en_abstract_of(uri, result):
     #Retrieve and parse graph, get labels and abstracts
     g = rdflib.Graph()
     g.parse(format = 'n3', data = cache.get_uri(uri))
-    labels = list(g.objects(subject = uri, predicate = RDFS.label))
     abstracts = list(g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")))
-    #If possible, find English labels and abstracts
-    en_labels = [l for l in labels if l.language == 'en']
+    #If possible, find English abstracts
     en_abstracts = [a for a in abstracts if _safe_detect(a) == 'en']
     #Return without effect if there was no English abstract
     if len(en_abstracts) == 0:
         return
-    #If there was no English label, pick one at random, or "" if no label at all
-    if len(en_labels) == 0:
-        en_labels = list(labels) + [""]
-    result.append(en_labels[0])
-    #Pick an English abstract, prerring one tagged English
+    result.append(_best_label(g, uri))
+    #Pick an English abstract, preferring one tagged English
     result.append(sorted(en_abstracts, key=lambda a : a.language=='en')[-1])
 
 def _add_immediate_connections(subject, g, total):
