@@ -16,8 +16,10 @@ function _channel_show(show) {
 	_channel_update();
 }
 
+/**
+ * AJAX request channel, then displays using _show_item()
+ */
 function _channel_update() {
-	//AJAX  request feed, then display using _show_item()
 	$.ajax({//TODO: Handle failures
     url: '/get-channel',
     dataType: 'json',
@@ -27,14 +29,14 @@ function _channel_update() {
     		_report_no_channel_items();
     		return;
     	}
-    	//Append the row for each channel item
+    	//Append the row for each channel item, TODO assumes no reordering or removal
     	var missing = response.length - ($( '#channelitems tr' ).length);
     	for (i = 0; i < missing; i++) {
     		_append_item_row( $('#channelitems'), response[i].name );
     	};
     	//Call _show_item() on each channel item
 		var poll = $.map( response, function (item, index) {
-					var row_selector = $('#channelitems tr:nth-child(' + (index+1) + ')');
+				   	var row_selector = $('#channelitems tr:nth-child(' + (index+1) + ')');
 					return _show_item( row_selector, item );
 		        });
 		if (poll.some(function (x) {return x;})) {
@@ -55,6 +57,12 @@ function _report_no_channel_items() {
 	$( '#channelitems tr:last' ).append('You have no items in your channel. Search to add items.');
 }
 
+/**
+ * Adds one row to the given table, representing a channel item
+ * with the given name.
+ * @param table_selector {jquery selector} The table to append a row to
+ * @param name {string} name of the item, e.g. 'Mozart'
+ */
 function _append_item_row(table_selector, name) {
 	table_selector.append('<tr></tr>');
 	var row_selector = table_selector.find( 'tr:last' );	
@@ -76,9 +84,9 @@ function _append_item_row(table_selector, name) {
 }
 
 /**
- * Appends one row to table #channelitems, displaying the feed item.
- * Starts a polling loop (updating progress bar) if the feed item is not ready.
- * @param response {object} The channel item to display
+ * Updates a single item row.
+ * @param row_selector {jquery selector} The row to update
+ * @param item {object} The channel item to display in the row
  */
 function _show_item( row_selector, item ) {
 	if (item.ready) {
