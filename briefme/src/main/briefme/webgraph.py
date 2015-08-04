@@ -24,7 +24,9 @@ def _get_uri(uri):
 
 def _load(uri):
     try:
-        response = urlfetch.fetch(uri, headers = {'Accept' : 'text/rdf+n3'})
+        response = urlfetch.fetch(uri, 
+                                  headers = {'Accept' : 'text/rdf+n3'},
+                                  deadline = 20)
     except DeadlineExceededError:
         raise UnavailableError('The external database is currently unavailable, deadline exceeded.')
     if response.status_code == 502:
