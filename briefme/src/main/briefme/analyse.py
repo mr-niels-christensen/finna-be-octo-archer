@@ -132,11 +132,8 @@ def _add_friends(dc_classes, total, dbpedia_item):
        @param dbpedia_item: Used for updating progress
     '''
     for (index, dc_class) in enumerate(dc_classes):
-        try:
-            dc_class_graph = WebGraph(dc_class)
-            for friend in dc_class_graph.subjects(DCTERMS.subject, dc_class):
-                total[friend] += 1
-            dbpedia_item.set_progress(0.2 + 0.4*index/len(dc_classes) )
-        except Exception as e:
-            logging.warn(e)
+        dc_class_graph = WebGraph(dc_class)
+        for friend in dc_class_graph.subjects(DCTERMS.subject, dc_class):
+            total[friend] += 1
+        dbpedia_item.set_progress(0.2 + 0.4*index/len(dc_classes) )
 
