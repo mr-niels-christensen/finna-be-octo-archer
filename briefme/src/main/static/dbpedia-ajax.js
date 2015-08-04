@@ -12,7 +12,7 @@ function lookup(show, search_for) {
   //Clear #canvas
 	$( "#canvas" ).empty();
 	//AJAX search DBpedia
-	$.ajax({//TODO: Handle failures
+	$.ajax({
     url: "http://lookup.dbpedia.org/api/search/KeywordSearch",
     data: {
       "QueryString" : search_for,
@@ -29,6 +29,13 @@ function lookup(show, search_for) {
       }
       //Add each hit as a row in table #options
       $.each( response.results, _add_result );
+    },
+    error: function( ) {
+      $( '#canvas' ).append('<p>Sorry, the search failed</p>');
+      $( '#canvas' ).append('<p><button type="button" class="btn btn-success">Retry</button></p>');
+      $( "#canvas button" ).on( "click", function() {
+        lookup('hits', $( '#query' ).val());
+      });
     },
     timeout: 4000,
   });
