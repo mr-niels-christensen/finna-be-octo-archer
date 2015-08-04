@@ -1,7 +1,7 @@
 /**
  * Clears the #canvas and displays the current user's channel
  * @param show {string} This function returns without effect,
- * if show is a string != 'feed'.
+ * if show is a string != 'channel'.
  */
 function _channel_show(show) {
 	//Check whether to show channel (this is default, so ok if show is undefined)
@@ -20,7 +20,7 @@ function _channel_show(show) {
  * AJAX request channel, then displays using _show_item()
  */
 function _channel_update() {
-	$.ajax({//TODO: Handle failures
+	$.ajax({
     url: '/get-channel',
     dataType: 'json',
 	success: function( response ) {
@@ -44,6 +44,10 @@ function _channel_update() {
 			setTimeout(_channel_update , 1000 );
 		}
 	},
+	error: function () {
+		_report_server_problem();
+		setTimeout(_channel_update , 5000 );
+	},
     timeout: 2500,
 	});	
 }
@@ -55,6 +59,15 @@ function _report_no_channel_items() {
 	$( '#channelitems' ).append('<tr></tr>');
 	$( '#channelitems tr:last' ).append('<td></td>');
 	$( '#channelitems tr:last' ).append('You have no items in your channel. Search to add items.');
+}
+
+/**
+ * Creates one row in table #channelitems, providing a bit of information
+ */
+function _report_server_problem() {
+	$( '#channelitems' ).append('<tr></tr>');
+	$( '#channelitems tr:last' ).append('<td></td>');
+	$( '#channelitems tr:last' ).append('Waiting for server...');
 }
 
 /**

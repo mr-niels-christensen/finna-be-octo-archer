@@ -30,6 +30,12 @@ function _play_item(show, item) {
       }
 		})
 	},
+  error: function () {
+      $( '#canvas' ).append( '<p>Waiting for server...</p>' );
+      setTimeout(function () {
+        _play_item(show, item);
+      } , 5000 );
+  },
 	timeout: 2500,
 	});
 }

@@ -53,7 +53,7 @@ class _CreateItemHandler(webapp2.RequestHandler):
             raise ue # Retry according to queue settings
         except Exception as e:
             logging.warn('Failed to process {}'.format(item), exc_info = True);
-            item.set_failed(e) # Do not retry
+            item.set_failed() # Do not retry
         self.response.write("OK")
 
 class _GetChannelHandler(webapp2.RequestHandler):

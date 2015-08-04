@@ -1,14 +1,13 @@
 from google.appengine.api import memcache
 from google.appengine.api import urlfetch
+from google.appengine.api.urlfetch_errors import DeadlineExceededError
 
-from urllib2 import urlopen, Request
 import logging
 
 import rdflib
 
 class UnavailableError(Exception):
-    def __init__(self):
-        super(UnavailableError, self).__init__('The external database is currently unavailable, error 502.')
+    pass
 
 class WebGraph(rdflib.Graph):
     def __init__(self, uri):
@@ -24,9 +23,12 @@ def _get_uri(uri):
     return result
 
 def _load(uri):
-    response = urlfetch.fetch(uri, headers = {'Accept' : 'text/rdf+n3'})
+    try:
+        response = urlfetch.fetch(uri, headers = {'Accept' : 'text/rdf+n3'})
+    except DeadlineExceededError:
+        raise UnavailableError('The external database is currently unavailable, deadline exceeded.')
     if response.status_code == 502:
-        raise UnavailableError()
+        raise UnavailableError('The external database is currently unavailable, error 502.')
     if response.status_code != 200:
         raise Exception('Some data is currently unavailable, error {}.'.format(response.status_code))
     return response.content
