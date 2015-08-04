@@ -11,6 +11,10 @@ from briefme.webgraph import UnavailableError
 from briefme.channel import Channel
 from briefme.item import Item
 
+#TODO Handle retries better, and used deferred:
+#https://cloud.google.com/appengine/articles/deferred?hl=en
+#http://stackoverflow.com/questions/19579606/retry-count-in-deferred-defer-in-gae
+#http://stackoverflow.com/questions/19032551/google-appengine-push-task-queues-is-this-the-tasks-last-retry
 def _task(key):
     '''Initiates the creation of an Item by putting its
        key on a taskqueue to be handled by _CreateItemHandler later
