@@ -7,7 +7,7 @@ import webapp2
 import json
 
 from briefme import analyse
-from briefme import cache
+from briefme.webgraph import UnavailableError
 from briefme.channel import Channel
 from briefme.item import Item
 
@@ -45,10 +45,15 @@ class _CreateItemHandler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/plain; charset=utf-8'
         item = ndb.Key(urlsafe = self.request.get('key_urlsafe')).get()
         try:
+            item.set_failed(False)
             analyse.brief(item)
+        except UnavailableError as ue:
+            logging.warn('Failed to process {}'.format(item), exc_info = True);
+            item.set_failed()
+            raise ue # Retry according to queue settings
         except Exception as e:
             logging.warn('Failed to process {}'.format(item), exc_info = True);
-            item.set_failed(e)
+            item.set_failed(e) # Do not retry
         self.response.write("OK")
 
 class _GetChannelHandler(webapp2.RequestHandler):

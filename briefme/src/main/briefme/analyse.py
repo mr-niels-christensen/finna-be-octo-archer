@@ -8,7 +8,7 @@ import json
 from langdetect.lang_detect_exception import LangDetectException
 import unicodedata as ud
 
-from briefme import cache
+from briefme.webgraph import WebGraph
 
 _PEOPLE_NW_PREDICATES = [rdflib.URIRef('http://dbpedia.org/property/children'),
                          rdflib.URIRef('http://dbpedia.org/property/predecessor'),
@@ -53,8 +53,7 @@ def brief(dbpedia_item):
        @param dbpedia_item: An Item for a DBpedia resource.
     '''
     #Parse the graph of facts about the main subject (identified by the Item's external_url)
-    g = rdflib.Graph()
-    g.parse(format = 'n3', data = cache.get_uri(dbpedia_item.external_url()))
+    g = WebGraph(dbpedia_item.external_url())
     dbpedia_item.set_progress(0.1)
     #Extract thumbnail and title
     thumbnail_url = g.value(subject = dbpedia_item.uriref(), predicate = _THUMBNAIL_PREDICATE)
@@ -99,8 +98,7 @@ def _add_en_abstract_of(uri, result):
        @param result: A list to add texts to.
     '''
     #Retrieve and parse graph, get labels and abstracts
-    g = rdflib.Graph()
-    g.parse(format = 'n3', data = cache.get_uri(uri))
+    g = WebGraph(uri)
     abstracts = list(g.objects(predicate = rdflib.URIRef("http://dbpedia.org/ontology/abstract")))
     #If possible, find English abstracts
     en_abstracts = [a for a in abstracts if _safe_detect(a) == 'en']
@@ -135,9 +133,7 @@ def _add_friends(dc_classes, total, dbpedia_item):
     '''
     for (index, dc_class) in enumerate(dc_classes):
         try:
-            dc_class_graph = rdflib.Graph()
-            data = cache.get_uri(dc_class)
-            dc_class_graph.parse(format = 'n3', data = data)
+            dc_class_graph = WebGraph(dc_class)
             for friend in dc_class_graph.subjects(DCTERMS.subject, dc_class):
                 total[friend] += 1
             dbpedia_item.set_progress(0.2 + 0.4*index/len(dc_classes) )

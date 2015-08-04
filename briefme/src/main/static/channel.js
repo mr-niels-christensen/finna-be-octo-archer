@@ -112,7 +112,11 @@ function _show_item( row_selector, item ) {
 	if (item.ready) {
 		progress_set(item.name, 1.0);
 	} else {
-		progress_set(item.name, item.progress);
+		if (item.failed) {
+			progress_issue(item.name);
+		} else {
+			progress_set(item.name, item.progress);
+		}
 	};
 	return !item.ready;
 }

@@ -15,12 +15,14 @@ function progress_append(id, dest_selector, width, height) {
 	bar.append('<div class="mask"></div>');
 	bar.append('<div class="progressIndicator">0%</div>');
 	bar.append('<span class="glyphicon glyphicon-ok progresstick"></span>');
+	bar.append('<span class="glyphicon glyphicon-hourglass progresshourglass"></span>');
 }
 
 //Put the progress bar back to 0%
 function progress_reset(id) {
 	id = _clean(id);
 	var parent = $("#" + id);
+	parent.removeClass("issue");
 	parent.removeClass("working");
 	parent.removeClass("complete");
 	parent.find(".mask").css("left", "0%");
@@ -33,14 +35,28 @@ function progress_reset(id) {
 function progress_set(id, fraction) {
 	id = _clean(id);
 	var parent = $("#" + id);
+	parent.removeClass("issue");
 	parent.addClass("working");
 	var pct = Math.floor(fraction*100);
 	parent.find(".progressIndicator").html(pct + "%");
 	if(fraction > 0.99) {
+		parent.removeClass("issue");
 		parent.removeClass("working");
 		parent.addClass("complete");
 		return;
 	}
 	parent.find(".mask").css("left", pct + "%");
 	parent.find(".mask").width((100 - pct) + "%");
+}
+
+/*
+ * Reports a (maybe temporary) issue with the progress.
+ * @param id {string} The HTML/CSS id of the progress bar to update
+ */
+function progress_issue(id) {
+	//TODO: Reuse code for clean parent, or make an object
+	id = _clean(id);
+	var parent = $("#" + id);
+	parent.removeClass("working");
+	parent.addClass("issue");
 }

@@ -13,7 +13,7 @@ class Item(ndb.Model):
        and 'ready' attributes. This is somewhat redundant, as progress should be 1.0
        whenever ready is True.
     '''
-
+    #TODO Consider closer tie between Boolean states and CSS classes in frontend
     created       = ndb.DateTimeProperty(auto_now_add = True)
     name          = ndb.StringProperty(required = True)
     namespace     = ndb.StringProperty(required = True)
@@ -22,6 +22,8 @@ class Item(ndb.Model):
     '''Value between 0.0 and 1.0. TODO: Verify or remodel
     '''
     progress      = ndb.FloatProperty(default = 0.01)
+    failed        = ndb.BooleanProperty(required = True,
+                                        default = False)
     title         = ndb.StringProperty()
     thumbnail_url = ndb.StringProperty()
     '''Currently always a list of even length on the form
@@ -92,11 +94,11 @@ class Item(ndb.Model):
         self.thumbnail_url = thumbnail_url
         self.put()
         
-    def set_failed(self, exception):
-        '''TODO: This is currently just calling set_finished_with_data,
-           but should go to a separate failed state
+    def set_failed(self, value = True):
+        '''Utility: Updates and stores self in one operation
         '''
-        self.set_finished_with_data(['Error','Sorry, {}'.format(exception)])
+        self.failed = value
+        self.put()
 
     def as_jsonifiable(self):
         '''Converts this Item to a structure suitable for JSON output
