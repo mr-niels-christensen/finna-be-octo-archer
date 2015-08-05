@@ -1,26 +1,18 @@
 /**
- * Clear #canvas, lists content and narrates the named item.
- * @param show {string} If not == 'player', this function
- * returns without any effect.
+ * Narrates the named item.
  * @param item {string} The item to play, e.g. 'Mozart'.
  */
-function _play_item(show, item) {
+function play_item(item) {
   //Always cancel any ongoing utterances on update
   window.speechSynthesis.cancel();
-  //Check show, return if not == 'player'
-  if (show != 'player') {
-    return;
-  }
-  //Clear #canvas
-  $( "#canvas" ).empty();
-	$.ajax({//TODO: Handle failures
+	$.ajax({
 	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
 	dataType: 'json',
 	success: function (response) {
 		_play_all($.map(response.data, function (label_or_abstract, index){
       if (index % 2 == 0) {//A label
-        $( '#canvas' ).append( '<p></p>' );
-        $( '#canvas p:last' ).html( label_or_abstract );
+        //$( '#canvas' ).append( '<p></p>' );
+        //$( '#canvas p:last' ).html( label_or_abstract );
         if (label_or_abstract.length > 0) {
           return _text_to_utlist('Next up: ' + label_or_abstract, true);
         }
@@ -30,9 +22,9 @@ function _play_item(show, item) {
 		}));
 	},
   error: function () {
-      $( '#canvas' ).append( '<p>Waiting for server...</p>' );
+      //$( '#canvas' ).append( '<p>Waiting for server...</p>' );
       setTimeout(function () {
-        _play_item(show, item);
+        play_item(item);
       } , 5000 );
   },
 	timeout: 2500,
@@ -96,5 +88,3 @@ function _play_next(msg, utlist){
   window.speechSynthesis.speak(msg);
 }
 
-/** Call _play_item() when appstate changes */
-appstate_on_update(_play_item, ['show', 'item']);
