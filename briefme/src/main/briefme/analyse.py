@@ -53,7 +53,7 @@ def brief(dbpedia_item):
        @param dbpedia_item: An Item for a DBpedia resource.
     '''
     #Parse the graph of facts about the main subject (identified by the Item's external_url)
-    g = WebGraph(dbpedia_item.external_url())
+    g = WebGraph(dbpedia_item.external_url(), fail_if_not_loaded = True)
     dbpedia_item.set_progress(0.1)
     #Extract thumbnail and title
     thumbnail_url = g.value(subject = dbpedia_item.uriref(), predicate = _THUMBNAIL_PREDICATE)
