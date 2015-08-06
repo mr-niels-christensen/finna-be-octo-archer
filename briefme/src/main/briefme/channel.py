@@ -13,9 +13,13 @@ class Channel(ndb.Model):
 
     created   = ndb.DateTimeProperty(auto_now_add = True)
 
-    '''The NDB keys for the items in this Channel.
+    '''The NDB keys for not-done items in this Channel.
     '''
     item_keys = ndb.KeyProperty(repeated = True,
+                                kind = Item)
+    '''The NDB keys for done items in this Channel.
+    '''
+    done_keys = ndb.KeyProperty(repeated = True,
                                 kind = Item)
     owner     = ndb.UserProperty(required = True)
 
@@ -38,6 +42,14 @@ class Channel(ndb.Model):
            @param item_key: An ndb.Key for an Item to add
         '''
         self.item_keys.append(item_key)
+        self.put()
+
+    def mark_item_done(self, item_key):
+        '''Moves item_key from self.item_keys to self.done_keys
+           @param item_key: An ndb.Key for an Item in self.item_keys
+        '''
+        self.item_keys.remove(item_key)
+        self.done_keys.append(item_key)
         self.put()
 
     def write_as_json(self, writer):

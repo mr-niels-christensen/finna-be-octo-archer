@@ -87,11 +87,28 @@ class _AddToChannelHandler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         item.write_as_json(self.response)
 
+class _MarkDoneHandler(webapp2.RequestHandler):
+    def post(self, name):
+        '''Looks up (or creates) the current user's Channel,
+           then adds the named Item to that Channel.
+           If the Item did not exist, it will be created.
+           Responds with a JSON rendering of the named Item.
+           @param name: The name of an Item in namespace 'http://dbpedia.org/resource/'
+        '''
+        #CORS: Allow JSON request from Javascript anywhere
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        channel = Channel.for_user(users.get_current_user())
+        item = Item.for_name(name, create_cb = _task)
+        channel.mark_item_done(item.key)
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        self.response.write('"OK"')
+
 #TODO better naming of URLs
 application = webapp2.WSGIApplication([
     webapp2.Route(r'/get-item/dbpedia-resource/<name>', handler=_GetItemDbpediaResourceHandler, name='get-item'),
     webapp2.Route(r'/create-item', handler=_CreateItemHandler, name='create-item'),
     webapp2.Route(r'/get-channel', handler=_GetChannelHandler, name='get-channel'),
     webapp2.Route(r'/add-to-feed/<name>', handler=_AddToChannelHandler, name='add-to-channel'),
+    webapp2.Route(r'/mark-done/<name>', handler=_MarkDoneHandler, name='mark-done'),
 ], debug=True) #debug=true means stack traces in browser
 

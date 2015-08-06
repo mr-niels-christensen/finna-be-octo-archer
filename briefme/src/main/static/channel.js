@@ -20,6 +20,7 @@ function _channel_show(show) {
  * AJAX request channel, then displays using _show_item()
  */
 function _channel_update() {
+	//TODO: An update may prevent pausing a running narrative
 	$.ajax({
     url: '/get-channel',
     dataType: 'json',
@@ -79,9 +80,16 @@ function _report_server_problem() {
 function _append_item_row(table_selector, name) {
 	table_selector.append('<tr></tr>');
 	var row_selector = table_selector.find( 'tr:last' );	
-	//Add Play column
+	//Add Play/Done column
 	row_selector.append('<td></td>')
-	row_selector.find( 'td:last' ).append('<button type="button" class="btn btn-success">Play</button>');
+	row_selector.find( 'td:last' ).append('<div></div>');
+	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-success btn-play">Play</button>');
+	row_selector.find( 'td:last' ).append('<div></div>');
+	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-default btn-done">Done</button>');
+	row_selector.find( '.btn-done' ).on( "click", function (event) {
+		row_selector.empty();
+		ajax_mark_done(name, _channel_update);
+	});
 	row_selector.append('<td></td>')
 	row_selector.find( 'td:last' ).append('<img class="feeditem"></img>')
 	//Add title column
@@ -103,10 +111,10 @@ function _append_item_row(table_selector, name) {
  */
 function _show_item( row_selector, item ) {
 	if (item.ready) {
-		attach_item(item.name, row_selector.find( 'button' ));
-		row_selector.find( 'button' ).prop('disabled', false);
+		attach_item(item.name, row_selector.find( '.btn-play' ));
+		row_selector.find( '.btn-play' ).prop('disabled', false);
 	} else {
-		row_selector.find( 'button' ).prop('disabled', true);
+		row_selector.find( '.btn-play' ).prop('disabled', true);
 	}
 	//Add thumbnail
 	if (!item.thumbnail_url) {
