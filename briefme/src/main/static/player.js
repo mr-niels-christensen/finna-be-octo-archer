@@ -2,14 +2,12 @@
  * Narrates the named item.
  * @param item {string} The item to play, e.g. 'Mozart'.
  */
-function play_item(item) {
-  //Always cancel any ongoing utterances on update
-  window.speechSynthesis.cancel();
+function attach_item(item, button) {
 	$.ajax({
 	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
 	dataType: 'json',
 	success: function (response) {
-		_play_all($.map(response.data, function (label_or_abstract, index){
+		_attach($.map(response.data, function (label_or_abstract, index){
       if (index % 2 == 0) {//A label
         //$( '#canvas' ).append( '<p></p>' );
         //$( '#canvas p:last' ).html( label_or_abstract );
@@ -19,7 +17,7 @@ function play_item(item) {
       } else {//An abstract
         return _text_to_utlist(label_or_abstract, false);
       }
-		}));
+		}), button);
 	},
   error: function () {
       //$( '#canvas' ).append( '<p>Waiting for server...</p>' );
@@ -62,13 +60,38 @@ function _text_to_utlist(txt, high_pitch) {
  * {text: 'Hello', pitch: 1.0}
  * The array will be modified.
  */
-function _play_all(utlist) {
+function _attach(utlist, button) {
   var msg = new SpeechSynthesisUtterance();
   msg.onend = function(event) {
-    _play_next(msg, utlist);
+    _play_next(msg, utlist, button);
   };
-  _play_next(msg, utlist);
+  button.data("playing", false);
+  button.on( "click", 
+             {msg: msg, utlist: utlist},
+              _on_play_pause);
 }
+
+/**
+ * Event handler for the play/pause/resume button of a channel item.
+ * @param event {Event} Must have the name of the relevant item
+ * as event.data.name
+ */
+function _on_play_pause(event) {
+  /* Chrome does not seem to do window.speechSynthesis.paused correctly
+     so using $.data( document.body, "paused") to store that state. */
+  if ($(this).data("playing")) {
+    $(this).data("playing", false);
+    //TODO Restack msg.text
+    window.speechSynthesis.pause();
+    window.speechSynthesis.cancel();
+    $(this).html("Play");
+  } else {
+    $(this).data("playing", true)
+    _play_next(event.data.msg, event.data.utlist, $(this));
+    $(this).html('Pause');
+  }
+}
+
 
 /**
  * Removes and plays the first utterance in the
@@ -79,11 +102,15 @@ function _play_all(utlist) {
  * @param utlist {array} a sequqence of utterances,
  * each one like {text: 'Hello', pitch: 1.0}
  */
-function _play_next(msg, utlist){
+function _play_next(msg, utlist, button){
   if (0 == utlist.length) {
     return;
   };
+  if (!button.data("playing")) {//pause/cancel caused a call to msg.onend
+    return;
+  }
   var ut = utlist.shift();
+  console.log(ut);
   $.each(ut, function (key, val) {msg[key]=val});
   window.speechSynthesis.speak(msg);
 }

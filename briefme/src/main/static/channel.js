@@ -103,9 +103,7 @@ function _append_item_row(table_selector, name) {
  */
 function _show_item( row_selector, item ) {
 	if (item.ready) {
-		row_selector.find( 'button' ).on( "click", 
-										  {name: item.name},
-										  _on_play_pause);
+		attach_item(item.name, row_selector.find( 'button' ));
 		row_selector.find( 'button' ).prop('disabled', false);
 	} else {
 		row_selector.find( 'button' ).prop('disabled', true);
@@ -132,31 +130,6 @@ function _show_item( row_selector, item ) {
 		}
 	};
 	return !item.ready;
-}
-
-/**
- * Event handler for the play/pause/resume button of a channel item.
- * @param event {Event} Must have the name of the relevant item
- * as event.data.name
- */
-function _on_play_pause(event) {
-	/* Chrome does not seem to do window.speechSynthesis.paused correctly
-	   so using $.data( document.body, "paused") to store that state. */
-	if (!window.speechSynthesis.speaking) {
-		play_item(event.data.name);
-		$.data( document.body, "paused", false );
-		$(this).html('Pause');
-		return;
-	}
-	if ($.data( document.body, "paused")) {
-		window.speechSynthesis.resume();
-		$.data( document.body, "paused", false );
-		$(this).html('Pause');
-		return;		
-	}
-	window.speechSynthesis.pause();
-	$.data( document.body, "paused", true );
-	$(this).html("Resume");
 }
 
 /** Call _channel_show() when appstate changes */
