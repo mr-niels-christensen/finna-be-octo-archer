@@ -77,11 +77,12 @@ function _attach(utlist, button) {
  * as event.data.name
  */
 function _on_play_pause(event) {
-  /* Chrome does not seem to do window.speechSynthesis.paused correctly
-     so using $.data( document.body, "paused") to store that state. */
+  /* Chrome (especially on Android) does a lot of weird stuff with
+     the speaking/paused state, so we need to be hard-handed (using cancel) 
+     and keep the state ourselves. */
   if ($(this).data("playing")) {
     $(this).data("playing", false);
-    //TODO Restack msg.text
+    event.data.utlist.unshift(event.data.msg._current);
     window.speechSynthesis.pause();
     window.speechSynthesis.cancel();
     $(this).html("Play");
@@ -110,7 +111,8 @@ function _play_next(msg, utlist, button){
     return;
   }
   var ut = utlist.shift();
-  console.log(ut);
+  msg._current = ut;
+  //TODO link more info as msg._foo
   $.each(ut, function (key, val) {msg[key]=val});
   window.speechSynthesis.speak(msg);
 }
