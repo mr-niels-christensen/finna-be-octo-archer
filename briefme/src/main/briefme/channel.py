@@ -73,5 +73,8 @@ class Channel(ndb.Model):
         '''Writes this Channel to the given writer as JSON.
            Right now, this writes a JSON list with one element per item.
         '''
-        l = [i.as_jsonifiable() for i in ndb.get_multi([iic.key for iic in self.items if not iic.done])]
+        iics_not_done = [iic for iic in self.items if not iic.done]
+        l = [i.as_jsonifiable() for i in ndb.get_multi([iic.key for iic in iics_not_done])]
+        for (item, iic) in zip (l, iics_not_done):
+            item['checkpoint'] = iic.checkpoint
         json.dump(l, writer)
