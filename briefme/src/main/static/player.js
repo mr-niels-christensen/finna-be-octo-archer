@@ -7,7 +7,7 @@ function attach_item(item, button) {
 	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
 	dataType: 'json',
 	success: function (response) {
-		_attach($.map(response.data, function (label_or_abstract, index){
+    var utlist = $.map(response.data, function (label_or_abstract, index){
       if (index == 0) {//Welcome line, opening the intro
         return _text_to_utlist(label_or_abstract, true);
       }
@@ -18,7 +18,10 @@ function attach_item(item, button) {
       } else {//An abstract
         return _text_to_utlist(label_or_abstract, false);
       }
-		}), button);
+    });
+    _annotate(utlist, '_name', item);
+    _enumerate(utlist);
+		_attach(utlist, button);
 	},
   error: function () {
       //$( '#canvas' ).append( '<p>Waiting for server...</p>' );
@@ -28,6 +31,18 @@ function attach_item(item, button) {
   },
 	timeout: 2500,
 	});
+}
+
+function _enumerate(utlist) {
+  $.each(utlist, function (index, ut) {
+    ut._index = index;
+  });
+}
+
+function _annotate(utlist, key, value) {
+  $.each(utlist, function (index, ut) {
+    ut[key] = value;
+  });
 }
 
 /**
@@ -64,6 +79,10 @@ function _text_to_utlist(txt, high_pitch) {
 function _attach(utlist, button) {
   var msg = new SpeechSynthesisUtterance();
   msg.onend = function(event) {
+    if (!button.data("playing")) {//pause/cancel caused a call to msg.onend
+      return;
+    }
+    console.log('Done ' + msg._current._name + ':' + msg._current._index);
     _play_next(msg, utlist, button);
   };
   button.data("playing", false);
@@ -108,9 +127,6 @@ function _play_next(msg, utlist, button){
   if (0 == utlist.length) {
     return;
   };
-  if (!button.data("playing")) {//pause/cancel caused a call to msg.onend
-    return;
-  }
   var ut = utlist.shift();
   msg._current = ut;
   //TODO link more info as msg._foo

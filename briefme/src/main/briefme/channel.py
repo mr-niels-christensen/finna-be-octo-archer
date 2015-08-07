@@ -8,7 +8,6 @@ class Channel(ndb.Model):
        In the current model, there is exactly one channel per user.
        The channel simply records the items (think of these as "single posts")
        that the user has added to her Channel.
-       An obvious TODO is to mark the items that have alreaddy been played.
     '''
 
     created   = ndb.DateTimeProperty(auto_now_add = True)
