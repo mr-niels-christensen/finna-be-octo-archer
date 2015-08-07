@@ -70,10 +70,31 @@ def brief(dbpedia_item):
     for (index, (friend, _score)) in enumerate(total.most_common(10)):
         _add_en_abstract_of(friend, result)
         dbpedia_item.set_progress(0.6 + 0.03*index)
-
     dbpedia_item.set_progress(0.9)
+    _add_intro(result, dbpedia_item.title)
+    _add_extro(result, dbpedia_item.title)
     #Finalize item with the list of abstracts
     dbpedia_item.set_finished_with_data(result)
+
+_STD_INTRO_TEMPLATE = 'This brief will first cover {}, then move on to a few related stories, like {} and {}. All content is provided by Wikipedia. Thank you!'
+_ALT_INTRO_TEMPLATE = 'All content is provided by Wikipedia. Thank you!'
+
+def _add_intro(label_abstract_list, title):
+    '''Adds two strings, welcome message and introduction, to the label_abstract_list.
+       @param label_abstract_list A even-length list of the form label0, abstract0, label1, abstract1,...
+       @param title The title of the item.
+    '''
+    first_labels = label_abstract_list[0:5:2]
+    intro = _ALT_INTRO_TEMPLATE if len(first_labels) < 3 else _STD_INTRO_TEMPLATE.format(*first_labels)
+    label_abstract_list.insert(0, 'Welcome to the brief on {}.'.format(title))
+    label_abstract_list.insert(1, intro)
+
+def _add_extro(label_abstract_list, title):
+    '''Adds one strings, an extro message, to the label_abstract_list.
+       @param label_abstract_list A even-length list of the form label0, abstract0, label1, abstract1,...
+       @param title The title of the item.
+    '''
+    label_abstract_list.append('This ends the brief on {}. Thank you for listening.'.format(title))
 
 def _best_label(g, uri):
     '''Look up all labels for uri in g, return the best choice for English.

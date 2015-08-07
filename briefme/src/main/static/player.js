@@ -8,9 +8,10 @@ function attach_item(item, button) {
 	dataType: 'json',
 	success: function (response) {
 		_attach($.map(response.data, function (label_or_abstract, index){
+      if (index == 0) {//Welcome line, opening the intro
+        return _text_to_utlist(label_or_abstract, true);
+      }
       if (index % 2 == 0) {//A label
-        //$( '#canvas' ).append( '<p></p>' );
-        //$( '#canvas p:last' ).html( label_or_abstract );
         if (label_or_abstract.length > 0) {
           return _text_to_utlist('Next up: ' + label_or_abstract, true);
         }
