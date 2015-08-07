@@ -89,10 +89,8 @@ class _AddToChannelHandler(webapp2.RequestHandler):
 
 class _MarkDoneHandler(webapp2.RequestHandler):
     def post(self, name):
-        '''Looks up (or creates) the current user's Channel,
-           then adds the named Item to that Channel.
-           If the Item did not exist, it will be created.
-           Responds with a JSON rendering of the named Item.
+        '''Looks up the current user's Channel,
+           and the named Item and marks the item as done.
            @param name: The name of an Item in namespace 'http://dbpedia.org/resource/'
         '''
         #CORS: Allow JSON request from Javascript anywhere
@@ -103,6 +101,21 @@ class _MarkDoneHandler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         self.response.write('"OK"')
 
+class _SetCheckpointHandler(webapp2.RequestHandler):
+    def post(self, name, index):
+        '''Looks up the current user's Channel,
+           and the named Item and sets a checkpoint for that Item and user.
+           @param name: The name of an Item in namespace 'http://dbpedia.org/resource/'
+           @param index: An index checkpoint (i.e. how far is the user in that item).
+        '''
+        #CORS: Allow JSON request from Javascript anywhere
+        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        channel = Channel.for_user(users.get_current_user())
+        item = Item.for_name(name, create_cb = _task)
+        channel.set_checkpoint(item.key, int(index))
+        self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
+        self.response.write('"OK"')
+
 #TODO better naming of URLs
 application = webapp2.WSGIApplication([
     webapp2.Route(r'/get-item/dbpedia-resource/<name>', handler=_GetItemDbpediaResourceHandler, name='get-item'),
@@ -110,5 +123,6 @@ application = webapp2.WSGIApplication([
     webapp2.Route(r'/get-channel', handler=_GetChannelHandler, name='get-channel'),
     webapp2.Route(r'/add-to-feed/<name>', handler=_AddToChannelHandler, name='add-to-channel'),
     webapp2.Route(r'/mark-done/<name>', handler=_MarkDoneHandler, name='mark-done'),
+    webapp2.Route(r'/set-checkpoint/<name>/<index>', handler=_SetCheckpointHandler, name='mark-done'),
 ], debug=True) #debug=true means stack traces in browser
 
