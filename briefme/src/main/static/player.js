@@ -33,12 +33,20 @@ function attach_item(item, button) {
 	});
 }
 
+/**
+ * Annotates each element in utlist with its index in the list, as ._index
+ * @param utlist a list of utterance objects.
+ */
 function _enumerate(utlist) {
   $.each(utlist, function (index, ut) {
     ut._index = index;
   });
 }
 
+/**
+ * Annotates each element in utlist with the given key and value
+ * @param utlist a list of utterance objects.
+ */
 function _annotate(utlist, key, value) {
   $.each(utlist, function (index, ut) {
     ut[key] = value;
@@ -57,12 +65,12 @@ function _text_to_utlist(txt, high_pitch) {
   //See http://updates.html5rocks.com/2014/01/Web-apps-that-talk---Introduction-to-the-Speech-Synthesis-API
   //Dodge https://code.google.com/p/chromium/issues/detail?id=369472
   return $.map(txt.split('.'), function( value ) {
-    if (value.length > 349) {//TODO: Handle this
-        console.log('Too long, ' + value.length);
+    if (value.length > 300) {//TODO: Actually handle this
+      //Too long
       return null;
     }
     if (value.length < 2) {
-        console.log('Too short, ' + value);
+      //Too short
       return null;
     }
     return {text: value, pitch: (high_pitch) ? 1.15 : 1.0};
@@ -82,7 +90,7 @@ function _attach(utlist, button) {
     if (!button.data("playing")) {//pause/cancel caused a call to msg.onend
       return;
     }
-    console.log('Done ' + msg._current._name + ':' + msg._current._index);
+    ajax_set_checkpoint(msg._current._name, msg._current._index);
     _play_next(msg, utlist, button);
   };
   button.data("playing", false);
