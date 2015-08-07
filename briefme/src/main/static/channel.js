@@ -111,7 +111,7 @@ function _append_item_row(table_selector, name) {
  */
 function _show_item( row_selector, item ) {
 	if (item.ready) {
-		attach_item(item.name, row_selector.find( '.btn-play' ));
+		attach_item(item.name, row_selector.find( '.btn-play' ), item.checkpoint);
 		row_selector.find( '.btn-play' ).prop('disabled', false);
 	} else {
 		row_selector.find( '.btn-play' ).prop('disabled', true);

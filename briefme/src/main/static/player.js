@@ -2,7 +2,7 @@
  * Narrates the named item.
  * @param item {string} The item to play, e.g. 'Mozart'.
  */
-function attach_item(item, button) {
+function attach_item(item, button, checkpoint) {
 	$.ajax({
 	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
 	dataType: 'json',
@@ -21,6 +21,7 @@ function attach_item(item, button) {
     });
     _annotate(utlist, '_name', item);
     _enumerate(utlist);
+    utlist = _forward_to_checkpoint(utlist, checkpoint);
 		_attach(utlist, button);
 	},
   error: function () {
@@ -31,6 +32,16 @@ function attach_item(item, button) {
   },
 	timeout: 2500,
 	});
+}
+
+/**
+ * Annotates each element in utlist with its index in the list, as ._index
+ * @param utlist a list of utterance objects.
+ */
+function _forward_to_checkpoint(utlist, checkpoint) {
+  return $.map(utlist, function (ut, index) {
+    return (index > checkpoint) ? ut : null;
+  });
 }
 
 /**
