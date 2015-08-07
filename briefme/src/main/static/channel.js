@@ -83,9 +83,9 @@ function _append_item_row(table_selector, name) {
 	//Add Play/Done column
 	row_selector.append('<td></td>')
 	row_selector.find( 'td:last' ).append('<div></div>');
-	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-success btn-play">Play</button>');
+	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-success btn-play btn-block">Play</button>');
 	row_selector.find( 'td:last' ).append('<div></div>');
-	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-default btn-done">Done</button>');
+	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-default btn-done btn-block">Done</button>');
 	row_selector.find( '.btn-done' ).on( "click", function (event) {
 		row_selector.empty();
 		ajax_mark_done(name, _channel_update);
