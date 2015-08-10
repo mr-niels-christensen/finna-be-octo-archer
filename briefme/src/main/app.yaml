@@ -1,5 +1,5 @@
 application: mayacs-test
-version: briefme-p-1
+version: briefme-p-2
 runtime: python27
 api_version: 1
 threadsafe: true

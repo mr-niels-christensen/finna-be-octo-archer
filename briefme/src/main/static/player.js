@@ -4,23 +4,10 @@
  */
 function attach_item(item, button, checkpoint) {
 	$.ajax({
-	url: '/get-item/dbpedia-resource/' + encodeURIComponent(item),//TODO provide url from server
+	url: '/item/' + encodeURIComponent(item),//TODO provide url from server
 	dataType: 'json',
 	success: function (response) {
-    var utlist = $.map(response.data, function (label_or_abstract, index){
-      if (index == 0) {//Welcome line, opening the intro
-        return _text_to_utlist(label_or_abstract, true);
-      }
-      if (index % 2 == 0) {//A label
-        if (label_or_abstract.length > 0) {
-          return _text_to_utlist('Next up: ' + label_or_abstract, true);
-        }
-      } else {//An abstract
-        return _text_to_utlist(label_or_abstract, false);
-      }
-    });
-    _annotate(utlist, '_name', item);
-    _enumerate(utlist);
+    var utlist = response.SpeechSynthesisUtterances;
     utlist = _forward_to_checkpoint(utlist, checkpoint);
 		_attach(utlist, button);
 	},
@@ -34,57 +21,9 @@ function attach_item(item, button, checkpoint) {
 	});
 }
 
-/**
- * Annotates each element in utlist with its index in the list, as ._index
- * @param utlist a list of utterance objects.
- */
 function _forward_to_checkpoint(utlist, checkpoint) {
   return $.map(utlist, function (ut, index) {
     return (index > checkpoint) ? ut : null;
-  });
-}
-
-/**
- * Annotates each element in utlist with its index in the list, as ._index
- * @param utlist a list of utterance objects.
- */
-function _enumerate(utlist) {
-  $.each(utlist, function (index, ut) {
-    ut._index = index;
-  });
-}
-
-/**
- * Annotates each element in utlist with the given key and value
- * @param utlist a list of utterance objects.
- */
-function _annotate(utlist, key, value) {
-  $.each(utlist, function (index, ut) {
-    ut[key] = value;
-  });
-}
-
-/**
- * Converts the given text to an object with settings
- * for a SpeechSynthesisUtterance object.
- * @param txt {string} A string of sentences, delimited by '.'s
- * @param high_pitch {boolean} If true, the pitch of the voice will
- * have above-average pitch.
- * @return {object} e.g. {text: 'Hello', pitch: 1.0}
- */
-function _text_to_utlist(txt, high_pitch) {
-  //See http://updates.html5rocks.com/2014/01/Web-apps-that-talk---Introduction-to-the-Speech-Synthesis-API
-  //Dodge https://code.google.com/p/chromium/issues/detail?id=369472
-  return $.map(txt.split('.'), function( value ) {
-    if (value.length > 300) {//TODO: Actually handle this
-      //Too long
-      return null;
-    }
-    if (value.length < 2) {
-      //Too short
-      return null;
-    }
-    return {text: value, pitch: (high_pitch) ? 1.15 : 1.0};
   });
 }
 

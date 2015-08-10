@@ -2,6 +2,9 @@ from google.appengine.ext import ndb
 
 import rdflib
 import json
+import itertools
+
+import tts
 
 class Item(ndb.Model):
     '''This represents a single RSS-like item, as in a single podcast episode.
@@ -100,14 +103,15 @@ class Item(ndb.Model):
         self.failed = value
         self.put()
 
-    def as_jsonifiable(self):
+    def meta_dict(self):
         '''Converts this Item to a structure suitable for JSON output
-           Currently excludes the 'created' field (which would require 
+           Excludes data itself and the 'created' field (which would require 
             separate formatting).
            @return the created data structure (a dict)
         '''
         d = self.to_dict()
         del d['created']
+        del d['data']
         return d
 
     def write_as_json(self, writer):
@@ -115,6 +119,14 @@ class Item(ndb.Model):
            Currently excludes the 'created' field (which would require 
             separate formatting).
         '''
-        json.dump(self.as_jsonifiable(), writer)
+        d = self.meta_dict()
+        ssu = tts.SpeechSynthesisUtterances(self.name)
+        ssu.append(self.data[0], emphasized = False)
+        for (paragraph, is_title) in zip(self.data[1:], itertools.cycle([False, True])):
+          if is_title:
+            paragraph = 'Next up: {}'.format(paragraph)
+          ssu.append(paragraph, emphasized = is_title)
+        d['SpeechSynthesisUtterances'] = ssu.as_list()
+        json.dump(d, writer)
 
 

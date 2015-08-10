@@ -25,7 +25,7 @@ def _task(key):
                   params     = {'key_urlsafe': key.urlsafe()}
     )
 
-class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
+class _ItemHandler(webapp2.RequestHandler):
     def get(self, name):
         '''Looks up the named Item and responds with a JSON rendering of that Item.
            If the Item did not exist, its creation is ordered on a
@@ -33,7 +33,7 @@ class _GetItemDbpediaResourceHandler(webapp2.RequestHandler):
            @param name: The name of an Item in namespace 'http://dbpedia.org/resource/'
         '''
         #CORS: Allow JSON request from Javascript anywhere
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        #self.response.headers['Access-Control-Allow-Origin'] = '*'
         item = Item.for_name(name, create_cb = _task)
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
         item.write_as_json(self.response)
@@ -76,16 +76,16 @@ class _AddToChannelHandler(webapp2.RequestHandler):
         '''Looks up (or creates) the current user's Channel,
            then adds the named Item to that Channel.
            If the Item did not exist, it will be created.
-           Responds with a JSON rendering of the named Item.
+           Responds with "OK".
            @param name: The name of an Item in namespace 'http://dbpedia.org/resource/'
         '''
         #CORS: Allow JSON request from Javascript anywhere
-        self.response.headers['Access-Control-Allow-Origin'] = '*'
+        #self.response.headers['Access-Control-Allow-Origin'] = '*'
         channel = Channel.for_user(users.get_current_user())
         item = Item.for_name(name, create_cb = _task)
         channel.add_item(item.key)
         self.response.headers['Content-Type'] = 'application/json; charset=utf-8'
-        item.write_as_json(self.response)
+        self.response.write('"OK"')
 
 class _MarkDoneHandler(webapp2.RequestHandler):
     def post(self, name):
@@ -118,7 +118,7 @@ class _SetCheckpointHandler(webapp2.RequestHandler):
 
 #TODO better naming of URLs
 application = webapp2.WSGIApplication([
-    webapp2.Route(r'/get-item/dbpedia-resource/<name>', handler=_GetItemDbpediaResourceHandler, name='get-item'),
+    webapp2.Route(r'/item/<name>', handler=_ItemHandler, name='item'),
     webapp2.Route(r'/create-item', handler=_CreateItemHandler, name='create-item'),
     webapp2.Route(r'/get-channel', handler=_GetChannelHandler, name='get-channel'),
     webapp2.Route(r'/add-to-feed/<name>', handler=_AddToChannelHandler, name='add-to-channel'),
