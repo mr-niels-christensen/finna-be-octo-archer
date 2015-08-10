@@ -71,6 +71,7 @@ function _report_server_problem() {
 	$( '#channelitems tr:last' ).append('Waiting for server...');
 }
 
+
 /**
  * Adds one row to the given table, representing a channel item
  * with the given name.
