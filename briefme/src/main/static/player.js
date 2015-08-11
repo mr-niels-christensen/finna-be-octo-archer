@@ -1,52 +1,7 @@
-/**
- * Narrates the named item.
- * @param item {string} The item to play, e.g. 'Mozart'.
- */
-function attach_item(item, button, checkpoint) {
-	$.ajax({
-	url: '/item/' + encodeURIComponent(item),//TODO provide url from server
-	dataType: 'json',
-	success: function (response) {
-    var utlist = response.SpeechSynthesisUtterances;
-    utlist = _forward_to_checkpoint(utlist, checkpoint);
-		_attach(utlist, button);
-	},
-  error: function () {
-      //$( '#canvas' ).append( '<p>Waiting for server...</p>' );
-      setTimeout(function () {
-        play_item(item);
-      } , 5000 );
-  },
-	timeout: 2500,
-	});
-}
-
 function _forward_to_checkpoint(utlist, checkpoint) {
   return $.map(utlist, function (ut, index) {
     return (index > checkpoint) ? ut : null;
   });
-}
-
-/**
- * Plays a sequence of SpeechSynthesisUtterances.
- * @param utlist {array} An array of objects each with
- * settings for a SpeechSynthesisUtterance, e.g.
- * {text: 'Hello', pitch: 1.0}
- * The array will be modified.
- */
-function _attach(utlist, button) {
-  var msg = new SpeechSynthesisUtterance();
-  msg.onend = function(event) {
-    if (!button.data("playing")) {//pause/cancel caused a call to msg.onend
-      return;
-    }
-    ajax_set_checkpoint(msg._current._name, msg._current._index);
-    _play_next(msg, utlist, button);
-  };
-  button.data("playing", false);
-  button.on( "click", 
-             {msg: msg, utlist: utlist},
-              _on_play_pause);
 }
 
 /**
@@ -119,24 +74,3 @@ function _player_on_pause(btn) {
   window.speechSynthesis.cancel();
   btn.html('Play');
 }
-
-/**
- * Removes and plays the first utterance in the
- * given list, by modifying and using the given
- * SpeechSynthesisUtterance.
- * @param msg {SpeechSynthesisUtterance} The object to
- * modify and pass to window.speechSynthesis.speak
- * @param utlist {array} a sequqence of utterances,
- * each one like {text: 'Hello', pitch: 1.0}
- */
-function _play_next(msg, utlist, button){
-  if (0 == utlist.length) {
-    return;
-  };
-  var ut = utlist.shift();
-  msg._current = ut;
-  //TODO link more info as msg._foo
-  $.each(ut, function (key, val) {msg[key]=val});
-  window.speechSynthesis.speak(msg);
-}
-

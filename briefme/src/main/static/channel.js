@@ -73,40 +73,6 @@ function _report_server_problem() {
 	$( '#channelitems tr:last' ).append('Waiting for server...');
 }
 
-
-/**
- * Adds one row to the given table, representing a channel item
- * with the given name.
- * @param table_selector {jquery selector} The table to append a row to
- * @param name {string} name of the item, e.g. 'Mozart'
- */
-function _append_item_row(table_selector, name) {
-	table_selector.append('<tr></tr>');
-	var row_selector = table_selector.find( 'tr:last' );	
-	//Add Play/Done column
-	row_selector.append('<td></td>')
-	row_selector.find( 'td:last' ).append('<div></div>');
-	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-success btn-play btn-block">Play</button>');
-	row_selector.find( 'td:last' ).append('<div></div>');
-	row_selector.find( 'td:last div:last' ).append('<button type="button" class="btn btn-default btn-done btn-block">Done</button>');
-	row_selector.find( '.btn-done' ).on( "click", function (event) {
-		row_selector.empty();
-		ajax_mark_done(name, _channel_update);
-	});
-	row_selector.append('<td></td>')
-	row_selector.find( 'td:last' ).append('<img class="feeditem"></img>')
-	//Add title column
-	row_selector.append('<td></td>')
-	row_selector.find( 'td:last' ).append('<div class="feeditem itemtitle"></div>');
-	//Add status/progress bar column
-	row_selector.append('<td></td>')
-	progress_append(
-		name, 
-		row_selector.find( 'td:last' ), 
-		100,//TODO responsive design, please 
-		40);
-}
-
 String.prototype.format = function() {
   var args = arguments;
   return this.replace(/{(\d+)}/g, function(match, number) { 
@@ -116,6 +82,7 @@ String.prototype.format = function() {
     ;
   });
 };
+
 /**
  * Updates a single item row.
  * @param row_selector {jquery selector} The row to update
