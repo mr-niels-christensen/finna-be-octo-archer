@@ -20,7 +20,7 @@ function _channel_update() {
     url: '/get-channel',
     dataType: 'json',
 	success: function( response ) {
-	//Clear #canvas
+		//Clear #canvas
 		$( "#canvas" ).empty();
 		//Create a table to display channel items in
 		$( '#canvas' ).append('<div class="table-responsive"></div>');
@@ -84,9 +84,9 @@ String.prototype.format = function() {
 };
 
 /**
- * Updates a single item row.
- * @param row_selector {jquery selector} The row to update
+ * Creates a single item row.
  * @param item {object} The channel item to display in the row
+ * @return HTML for a table row
  */
 function _show_item( item ) {
 	var template = $("#itemrowtemplate").html();//TODO: Cache
