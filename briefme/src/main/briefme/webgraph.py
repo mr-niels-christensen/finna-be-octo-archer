@@ -31,11 +31,16 @@ def _get_uri(uri):
         memcache.set('uri ' + uri, result, 86400)
     return result
 
+_KNOWN_LARGE_GRAPHS = ['http://dbpedia.org/resource/Category:Living_people']
+
 def _load(uri):
     try:
+        deadline = 300 if str(uri) in _KNOWN_LARGE_GRAPHS else 20
+        if deadline > 20:
+            logging.debug('Deadline {} for {}'.format(deadline, uri))
         response = urlfetch.fetch(uri, 
                                   headers = {'Accept' : 'text/rdf+n3'},
-                                  deadline = 20)
+                                  deadline = deadline)
     except DeadlineExceededError:
         raise LargeGraphOrSlowConnectionError('The external database is currently unavailable, deadline exceeded.')
     if response.status_code == 502:

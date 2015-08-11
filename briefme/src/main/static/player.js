@@ -1,3 +1,5 @@
+//TODO: Store data outside button - this mixes badly with updates!
+
 /**
  * Event handler for the play/pause button of a channel item.
  * @param event {Event} Click event of the button
