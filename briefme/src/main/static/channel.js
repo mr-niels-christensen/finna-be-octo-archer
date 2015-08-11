@@ -34,7 +34,13 @@ function _channel_update() {
 		var content = $.map( response, function (item, index) {
 				   	return _show_item( item );
 		        });
-		$('#channelitems tbody').append(content.join(''));
+		$('#channelitems tbody')
+			.append(content.join(''))
+			.on('click', '.btn-done', function (event) {
+				event.preventDefault();
+				console.log(event.target.value);
+				ajax_mark_done(event.target.value, _channel_update);
+			});
 		if (response.some(function (x) {return !(x.ready);})) {
 			//TODO: Use comet long polling
 			setTimeout(_channel_update , 1000 );
@@ -127,7 +133,8 @@ function _show_item( item ) {
 		item.thumbnail_url || "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg",
 		item.title || item.name,
 		pct, 
-		100 - pct);
+		100 - pct,
+		item.name);
 		//attach_item(item.name, row_selector.find( '.btn-play' ), item.checkpoint);
 }
 
