@@ -40,27 +40,27 @@
     </div><!-- container-fluid -->
 
     <script type="text/template" id="itemrowtemplate">
-      <tr>
+      <tr class="itemrow {1}">
         <td>
           <div>
-            <button type="button" class="btn btn-success btn-play btn-block">Play</button>
+            <button {2} type="button" class="btn btn-success btn-play btn-block">Play</button>
           </div>
           <div>
-            <button type="button" class="btn btn-default btn-done btn-block">Play</button>
+            <button type="button" class="btn btn-default btn-done btn-block">Done</button>
           </div>
         </td>
         <td>
-          <img class="feeditem"></img>
+          <img class="feeditem" src="{3}"></img>
         </td>
         <td>
-          <div class="feeditem itemtitle"></div>
+          <div class="feeditem itemtitle">{4}</div>
         </td>
         <td>
-          <div id="{TODO}" style="width:100;height:40">
+          <div id="{0}" style="width:100px;height:40px">
             <div class="progressbar">
               <div class="gradient"></div>
-              <div class="mask" style="left:{TODO};width:{TODO}"></div>
-              <div class="progressIndicator">{TODO}%</div>
+              <div class="mask" style="left:{5}%;width:{6}%"></div>
+              <div class="progressIndicator">{5}%</div>
               <span class="glyphicon glyphicon-ok progresstick"></span>
               <span class="glyphicon glyphicon-hourglass progresshourglass"></span>
             </div>
@@ -68,7 +68,7 @@
         </td>
       </tr>
     </script>
-    
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Bootstrap: Include all compiled plugins (below), or include individual files as needed -->

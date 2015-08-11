@@ -8,11 +8,6 @@ function _channel_show(show) {
 	if (show && (show != 'channel')) {
 		return;
 	};
-	//Clear #canvas
-	$( "#canvas" ).empty();
-	//Create a table to display channel items in
-	$( '#canvas' ).append('<div class="table-responsive"></div>');
-	$( '#canvas .table-responsive' ).append('<table id="channelitems" class="table table-striped table-hover"></table>');
 	_channel_update();
 }
 
@@ -25,22 +20,22 @@ function _channel_update() {
     url: '/get-channel',
     dataType: 'json',
 	success: function( response ) {
+	//Clear #canvas
+		$( "#canvas" ).empty();
+		//Create a table to display channel items in
+		$( '#canvas' ).append('<div class="table-responsive"></div>');
+		$( '#canvas .table-responsive' ).append('<table id="channelitems" class="table table-striped table-hover"><tbody></tbody></table>');
     	//Provide instructions if the user's channel is empty
     	if (response.length == 0) {
     		_report_no_channel_items();
     		return;
     	}
-    	//Append the row for each channel item, TODO assumes no reordering or removal
-    	var missing = response.length - ($( '#channelitems tr' ).length);
-    	for (i = 0; i < missing; i++) {
-    		_append_item_row( $('#channelitems'), response[i].name );
-    	};
     	//Call _show_item() on each channel item
-		var poll = $.map( response, function (item, index) {
-				   	var row_selector = $('#channelitems tr:nth-child(' + (index+1) + ')');
-					return _show_item( row_selector, item );
+		var content = $.map( response, function (item, index) {
+				   	return _show_item( item );
 		        });
-		if (poll.some(function (x) {return x;})) {
+		$('#channelitems tbody').append(content.join(''));
+		if (response.some(function (x) {return !(x.ready);})) {
 			//TODO: Use comet long polling
 			setTimeout(_channel_update , 1000 );
 		}
@@ -105,40 +100,35 @@ function _append_item_row(table_selector, name) {
 		40);
 }
 
+String.prototype.format = function() {
+  var args = arguments;
+  return this.replace(/{(\d+)}/g, function(match, number) { 
+    return typeof args[number] != 'undefined'
+      ? args[number]
+      : match
+    ;
+  });
+};
 /**
  * Updates a single item row.
  * @param row_selector {jquery selector} The row to update
  * @param item {object} The channel item to display in the row
  */
-function _show_item( row_selector, item ) {
-	if (item.ready) {
-		attach_item(item.name, row_selector.find( '.btn-play' ), item.checkpoint);
-		row_selector.find( '.btn-play' ).prop('disabled', false);
-	} else {
-		row_selector.find( '.btn-play' ).prop('disabled', true);
-	}
-	//Add thumbnail
-	if (!item.thumbnail_url) {
-		item.thumbnail_url = "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg";
-	};
-	if (item.thumbnail_url != row_selector.find( 'img' ).attr( 'src' )){
-		row_selector.find( 'img' ).attr( 'src', item.thumbnail_url );
-	}
-	if (!item.title) {
-		item.title = item.name;
-	}
-	row_selector.find ( ".itemtitle" ).html( item.title || item.name );
-	//Update progress bar and poll if necessary
-	if (item.ready) {
-		progress_set(item.name, 1.0);
-	} else {
-		if (item.failed) {
-			progress_issue(item.name);
-		} else {
-			progress_set(item.name, item.progress);
-		}
-	};
-	return !item.ready;
+function _show_item( item ) {
+	var template = $("#itemrowtemplate").html();//TODO: Cache
+	var id = item.name.replace(/\W/g, "_");
+	var pct = Math.floor(item.progress*100);
+	var klass = (item.ready) ? 'complete' :
+					(item.failed) ? 'issue' : 'working';
+	return template.format(
+		id, 
+		klass, 
+		(item.ready) ? '' : 'disabled="disabled"',
+		item.thumbnail_url || "https://upload.wikimedia.org/wikipedia/commons/0/02/Vraagteken.svg",
+		item.title || item.name,
+		pct, 
+		100 - pct);
+		//attach_item(item.name, row_selector.find( '.btn-play' ), item.checkpoint);
 }
 
 /** Call _channel_show() when appstate changes */

@@ -28,10 +28,10 @@
 .mask {
 	position:absolute;
 	font-size:1px;
-	min-width:100%;
+	
 	min-height:100%;
 	background-color:#FFFFFF;
-	left:0px;
+	
 	top:0px;
 }
 
