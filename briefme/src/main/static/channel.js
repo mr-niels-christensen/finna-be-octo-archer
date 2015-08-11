@@ -38,9 +38,10 @@ function _channel_update() {
 			.append(content.join(''))
 			.on('click', '.btn-done', function (event) {
 				event.preventDefault();
-				console.log(event.target.value);
-				ajax_mark_done(event.target.value, _channel_update);
-			});
+				ajax_mark_done(event.target.name, _channel_update);
+			})
+			.on('click', '.btn-play', player_on_play_pause)
+			;
 		if (response.some(function (x) {return !(x.ready);})) {
 			//TODO: Use comet long polling
 			setTimeout(_channel_update , 1000 );
@@ -134,7 +135,8 @@ function _show_item( item ) {
 		item.title || item.name,
 		pct, 
 		100 - pct,
-		item.name);
+		item.name,
+		item.checkpoint);
 		//attach_item(item.name, row_selector.find( '.btn-play' ), item.checkpoint);
 }
 

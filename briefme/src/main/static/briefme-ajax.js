@@ -49,7 +49,7 @@ function ajax_set_checkpoint(name, index){
     method: 'POST',
     dataType: 'json',
 	success: function () {
-		console.log('ajax_set_checkpoint ok');
+		console.log('ajax_set_checkpoint ok ' + name + ' ' + index);
 	},
 	error: function () {
 		console.log('ajax_set_checkpoint failed');
