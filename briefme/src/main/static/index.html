@@ -69,6 +69,24 @@
       </tr>
     </script>
 
+    <script type="text/template" id="hittemplate">
+      <tr>
+        <td>
+          <button name="{0}" type="button" class="btn btn-success btn-add">Add
+          </button>
+        </td>
+        <td>
+          <p>
+            <b>{1}</b>
+          </p>
+          <p>
+            <small>{2}</small>
+          </p>
+        </td>
+      </tr>
+    </script>
+
+
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
     <!-- Bootstrap: Include all compiled plugins (below), or include individual files as needed -->
@@ -76,7 +94,18 @@
 	<!-- Jquery BBQ --> 
 	<script src="jquery.ba-bbq.min.js"></script>
 	<!-- This app -->
-	<link href="briefme.css" rel="stylesheet">    
+	<link href="briefme.css" rel="stylesheet"> 
+  <script type="text/javascript">
+    String.prototype.format = function() {
+      var args = arguments;
+      return this.replace(/{(\d+)}/g, function(match, number) { 
+        return typeof args[number] != 'undefined'
+          ? args[number]
+          : match
+        ;
+      });
+    };
+  </script>
 	<script type="text/javascript" src="appstate.js">
     </script><!-- This needs to go before the other scripts-->
 	<script type="text/javascript" src="briefme-ajax.js">
@@ -86,6 +115,6 @@
   <script type="text/javascript" src="player.js"></script>
   <script type="text/javascript" src="channel.js">
     </script>
-    <script type="text/javascript">$(window).trigger( 'hashchange' );</script>
+  <script type="text/javascript">$(window).trigger( 'hashchange' );</script>
   </body>
 </html>

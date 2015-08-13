@@ -22,13 +22,19 @@ function lookup(show, search_for) {
     success: function( response ) {
       //Add table #options to contain hits from DBpedia
       $( '#canvas' ).append('<div class="table-responsive"></div>');
-      $( '#canvas .table-responsive' ).append('<table id="options" class="table table-striped table-hover"></table>');
+      $( '#canvas .table-responsive' ).append('<table id="options" class="table table-striped table-hover"><tbody></tbody></table>');
       if (response.results.length == 0) {
         _report_no_hits(search_for);
         return;
       }
       //Add each hit as a row in table #options
-      $.each( response.results, _add_result );
+      $('#options tbody').append(
+        $.map(response.results, _add_result)
+      )
+      .on('click', '.btn-add', function (event) {
+        event.preventDefault();
+        _add_to_feed(event.target.name);
+      });
     },
     error: function( ) {
       $( '#canvas' ).append('<p>Sorry, the search failed</p>');
@@ -52,24 +58,18 @@ function _report_no_hits(search_for) {
 }
 
 /*
- * Add an individual DBpedia hit as a row in table #options
- * @param index {number} The index of this hit, e.g. 5
+ * Represent an individual DBpedia hit as a row in table #options
  * @param result {object} Parsed JSON object from DBpedia
+ * @param index {number} The index of this hit, e.g. 5
  */
-function _add_result( index, result ) {
+function _add_result( result, index ) {
   //Extract id without namespace, e.g. 'Mozart'
   var id = result.uri.split("/").pop();
-  //Append a row displaying this DBpedia hit
-	$( "#options" ).append( "<tr></tr>" );
-  $( "#options tr:last" ).append( '<td><button type="button" class="btn btn-success">Add</button></td>' );
-  $( "#options tr:last button" ).on( "click", function() {
-      $(this).prop('disabled', true);
-      _add_to_feed(id);
-  });
-	$( "#options tr:last" ).append( "<td><p><b></b></p></td>" );
-	$( "#options tr:last b" ).append( result.label );
-	$( "#options tr:last td:last" ).append( "<p><small></small></p>" );
-	$( "#options tr:last small" ).append( _sentence(result.description) );
+  return $('#hittemplate').html().format(
+    id,
+    result.label,
+    _sentence(result.description)
+    );
 }
 
 //Return the first sentence of the textual descrition,
