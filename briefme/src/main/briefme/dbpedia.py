@@ -59,5 +59,8 @@ class DBpediaResource(object):
 if __name__ == '__main__':
     res = DBpediaResource.for_name('Titan_(moon)')
     print res._graph.serialize(format="n3")
+    #for s,o in res._get('DCTERMS:subject'):
+    #    print (s,o)
+
 
 
