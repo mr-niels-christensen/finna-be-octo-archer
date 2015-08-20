@@ -10,6 +10,9 @@ class DBpediaResource(object):
         self._graph.bind('DCTERMS', namespace.DCTERMS)
         self._graph.bind('PROP', 'http://dbpedia.org/property/')
         self._graph.bind('RES', 'http://dbpedia.org/resource/')
+        self._graph.bind('CAT', 'http://dbpedia.org/resource/Category:')
+        self._graph.bind('UMBELRC', 'http://umbel.org/umbel/rc/')
+        self._graph.bind('YAGO', 'http://dbpedia.org/class/yago/')
         self._graph.bind('ONT', 'http://dbpedia.org/ontology/')
         self._graph.bind('PROV', 'http://www.w3.org/ns/prov#')
 
@@ -54,13 +57,24 @@ class DBpediaResource(object):
 
     def _get(self, predicate_qname):
         for (s,o) in self._graph[:self._to_uriref(predicate_qname)]:
-            yield (self._graph.qname(s), self._graph.qname(o))
+            yield (self._simplify(s), self._simplify(o))
+
+    def _simplify(self, uri):
+        if isinstance(uri, rdflib.Literal):
+            return uri
+        try:
+            return self._graph.qname(uri)
+        except:
+            ns = {namespace : prefix for (prefix, namespace) in self._graph.namespaces()}
+            if uri in ns:
+                return ns[uri]
+            return unicode(uri)
 
 if __name__ == '__main__':
     res = DBpediaResource.for_name('Titan_(moon)')
     print res._graph.serialize(format="n3")
-    #for s,o in res._get('DCTERMS:subject'):
-    #    print (s,o)
+    for s,o in res._get('DCTERMS:subject'):
+        print (s,o)
 
 
 
