@@ -26,6 +26,26 @@ class DBpediaResource(object):
         res._rm_admin_triples()
         return res
 
+    @staticmethod
+    def category_for_name(name, lang='en'):
+        url = 'http://dbpedia.org/resource/Category:{}'.format(name)
+        res = DBpediaResource()
+        res._graph.bind('I', url)
+        res._graph.parse(url)
+        res._rm_other_languages(lang)
+        res._rm_admin_triples()
+        return res
+
+    @staticmethod
+    def yago_for_name(name, lang='en'):
+        url = 'http://dbpedia.org/class/yago/{}'.format(name)
+        res = DBpediaResource()
+        res._graph.bind('I', url)
+        res._graph.parse(url)
+        res._rm_other_languages(lang)
+        res._rm_admin_triples()
+        return res
+
     def _rm_other_languages(self,lang = 'en'):
         for (s, p, o) in self._graph:
             if isinstance(o, rdflib.Literal):
@@ -71,10 +91,10 @@ class DBpediaResource(object):
             return unicode(uri)
 
 if __name__ == '__main__':
-    res = DBpediaResource.for_name('Titan_(moon)')
+    #res = DBpediaResource.for_name('Titan_(moon)')
+    #res = DBpediaResource.category_for_name('Moons_of_Saturn')
+    res = DBpediaResource.yago_for_name('Planet109394007')
     print res._graph.serialize(format="n3")
-    for s,o in res._get('DCTERMS:subject'):
-        print (s,o)
 
 
 
